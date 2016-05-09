@@ -4,12 +4,13 @@ import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
 import com.internap.MiroC_UI.Common.Common;
 import com.internap.MiroC_UI.Common.InternapUI;
 import com.internap.MiroC_UI.Home.ConfigurationPage;
 import com.internap.MiroC_UI.Home.Home;
 import com.internap.MiroC_UI.Home.LoginPage;
-import com.internap.MiroC_UI.Home.PortSecurityPage;
+import com.internap.MiroC_UI.Pages.PortSecurityPage;
 import com.internap.MiroC_UI.Common.MyProjTestCaseUtils;
 
 public class PortSecurityTestCases extends MyProjTestCaseUtils {

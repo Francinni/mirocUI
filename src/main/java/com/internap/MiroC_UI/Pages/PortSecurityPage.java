@@ -1,4 +1,4 @@
-package com.internap.MiroC_UI.Home;
+package com.internap.MiroC_UI.Pages;
 
 import junit.framework.Assert;
 
