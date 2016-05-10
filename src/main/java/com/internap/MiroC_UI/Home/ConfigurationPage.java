@@ -6,6 +6,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import com.internap.MiroC_UI.Common.MyProjPage;
+import com.internap.MiroC_UI.Pages.EditUserPage;
 import com.internap.MiroC_UI.Pages.PortSecurityPage;
 
 public class ConfigurationPage extends MyProjPage {
@@ -36,6 +37,12 @@ public class ConfigurationPage extends MyProjPage {
 		
 		@FindBy(xpath = ".//*[@id='sidebar']/ul/li[11]/ul/li[9]/a")
 		private WebElement userTab;
+		
+			//edit user
+			//@FindBy(xpath = ".//*[@id='sidebar']/ul/li[11]/ul/li[9]/ul/li/a")
+			@FindBy(xpath = "//a[contains(.,'Edit Users ')]")
+			private WebElement editUserTab;
+		
 	
 	@Override
 	public ConfigurationPage and() {
@@ -50,6 +57,12 @@ public class ConfigurationPage extends MyProjPage {
 	public PortSecurityPage goPortSecurity (WebDriver driver){
 		this.portSecurityTab.click();
 		return PageFactory.initElements(driver, PortSecurityPage.class);
+	}
+	
+	public EditUserPage goEditUser (WebDriver driver){
+		this.userTab.click();
+		this.editUserTab.click();
+		return PageFactory.initElements(driver, EditUserPage.class);
 	}
 
 	
