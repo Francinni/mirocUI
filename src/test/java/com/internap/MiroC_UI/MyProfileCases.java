@@ -12,6 +12,7 @@ import com.internap.MiroC_UI.Home.Home;
 import com.internap.MiroC_UI.Home.LoginPage;
 import com.internap.MiroC_UI.Pages.MyProfilePage;
 import com.internap.MiroC_UI.Common.MyProjTestCaseUtils;
+import com.internap.MiroC_UI.Common.PageUtils;
 
 public class MyProfileCases extends MyProjTestCaseUtils{
 	
@@ -20,6 +21,7 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 			uiInstance.getDriver(), MyProfilePage.class);
 	ConfigurationPage configurationPage;
 	Home home;
+	
 	
 	String firstname = "testFirstName";
 	String lastname = "testLastName";  
@@ -38,18 +40,45 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 	}
 	
 	/**
-	 * This test case is the equivalent to the Testlink id: MIRO'
+	 * This test case is the equivalent to the Testlink id: MBOX-275- Change User Admin Info
 	 */ 
 	@Test(groups = { "Positive" },priority = 0) 
 	public void editMyProfile() { 
 		using(myProfilePage = home  
 				.goMyProfilePage(uiInstance.getDriver()) 
 				.editMyProfile(firstname,lastname,email))
-		.check(myProfilePage.userIsEdited(uiInstance.getDriver(), firstname, lastname, email))
+		.check(myProfilePage.userIsEdited(uiInstance.getDriver(), firstname, lastname, email));
 		
-		.andUsing(myProfilePage.editMyProfile("admin", "user", "")) 
-		.check(myProfilePage.userIsEdited(uiInstance.getDriver(), "admin", "user", ""));
+		//.andUsing(myProfilePage.editMyProfile("admin", "user", ""))
+		//.check(myProfilePage.userIsEdited(uiInstance.getDriver(), "admin", "user", ""));
 		
 	} 
+	
+	/**
+	 * This test case is the equivalent to the Testlink id: MBOX-588- User cannot change the username
+	 */
+	@Test(groups = { "Positive" }) 
+	public void checkUsernameFieldIsDisabled() { 
+		using(myProfilePage = home  
+				.goMyProfilePage(uiInstance.getDriver()))
+		.check(myProfilePage.usernameFieldIsDisabled(uiInstance.getDriver()));		
+	} 
+	
+	
+	/**
+	 * This test case is the equivalent to the Testlink id: MBOX-335- New user info is shown after some changes were performed
+	 */ 
+	@Test(groups = { "Positive" }) 
+	public void checkHeaderInfo() { 
+		using(myProfilePage = home  
+				.goMyProfilePage(uiInstance.getDriver()) 
+				.editMyProfile(firstname,lastname,email))
+				
+		.check(myProfilePage.userIsEdited(uiInstance.getDriver(), firstname, lastname, email),
+				myProfilePage.verifyUserInfoOnHeader(uiInstance.getDriver(), firstname, lastname));
+		
+	} 
+ 
+	
 
 } 

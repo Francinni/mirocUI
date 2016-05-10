@@ -31,5 +31,10 @@ public class PageUtils {
 		   return false;
 		  }
 		 }
+		
+		public static void refreshPage(WebDriver driver){
+			
+			driver.navigate().refresh();
+		}
 
 }
