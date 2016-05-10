@@ -36,6 +36,9 @@ public class Home extends MyProjPage {
 	@FindBy(xpath = "html/body/div[2]/div/div[3]/div/ul/li[3]/i")
 	private WebElement logout;
 	
+	@FindBy(xpath =  "//a[contains(.,'My Profile')]")
+	private WebElement myprofile;
+	
 	@Override
 	public Home and() {
 		return this;
@@ -45,10 +48,19 @@ public class Home extends MyProjPage {
 	public Home then() {
 		return this;
 	}
-	
+			
 	public ConfigurationPage goConfigurationTab (WebDriver driver){
 		this.configurationTab.click();
 		return PageFactory.initElements(driver, ConfigurationPage.class);
 	}
+	
+	public MyProfilePage goMyProfilePage (WebDriver driver){		
+		this.userName.click();
+		this.myprofile.click();
+		return PageFactory.initElements(driver, MyProfilePage.class);		
+	}
+	
+	
+	
 	
 }
