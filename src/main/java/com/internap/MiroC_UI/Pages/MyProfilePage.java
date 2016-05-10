@@ -1,4 +1,4 @@
-package com.internap.MiroC_UI.Home;
+package com.internap.MiroC_UI.Pages;
 
 
 import org.openqa.selenium.By;
@@ -24,7 +24,7 @@ public class MyProfilePage extends MyProjPage {
 	private WebElement lastname;
 	
 	@FindBy(xpath = "//input[@name='email']")
-	private WebElement email;
+	private WebElement email;  
 
 	@FindBy(xpath = "(//button[text()='Cancel'])[1]")
 	private WebElement cancel;
@@ -37,24 +37,33 @@ public class MyProfilePage extends MyProjPage {
 	
 	public MyProfilePage editMyProfile ( String firstname, String lastname, String email){
 		
-		this.firstname.clear();
-		this.lastname.clear();
-		this.email.clear();
+		this.firstname.clear();	
 		this.firstname.sendKeys(firstname);
-		this.lastname.sendKeys(lastname);
-		this.email.sendKeys(email);
-		
+		this.lastname.clear();
+		this.lastname.sendKeys(lastname); 
+		this.email.clear();
+		this.email.sendKeys(email);  
 		this.submit.click();
-		return this;
+		return this;   
 	}
 	
-	public Validator editUserMessageIsDisplayed(final WebDriver driver) {
+	public boolean isInserted( String firstname, String lastname, String email){
+		
+		if (this.firstname.getAttribute("value").equals(firstname) && this.lastname.getAttribute("value").equals(lastname) && this.email.getAttribute("value").equals(email))
+			return true;
+		else return false;				
+		
+	} 
+
+	
+	public Validator userIsEdited(final WebDriver driver, final String first, final String last, final String em) {
 		return new Validator() {
 			@Override
-			public void Validate() {
-							
+			public void Validate() {							
 				boolean thereIsAnSuccessfulMessage = PageUtils.isElementPresent(driver, By.xpath("//p[text()='User successfully edited']"));
 				Assert.assertTrue(thereIsAnSuccessfulMessage,"Succesful message is not displayed");
+				boolean theValuesWereInserted = isInserted(first,last,em);
+				Assert.assertTrue(theValuesWereInserted,"Values were not edited"); 
 			}
 		};
 	}

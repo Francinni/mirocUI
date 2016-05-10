@@ -10,7 +10,7 @@ import com.internap.MiroC_UI.Common.InternapUI;
 import com.internap.MiroC_UI.Home.ConfigurationPage;
 import com.internap.MiroC_UI.Home.Home;
 import com.internap.MiroC_UI.Home.LoginPage;
-import com.internap.MiroC_UI.Home.MyProfilePage;
+import com.internap.MiroC_UI.Pages.MyProfilePage;
 import com.internap.MiroC_UI.Common.MyProjTestCaseUtils;
 
 public class MyProfileCases extends MyProjTestCaseUtils{
@@ -20,6 +20,11 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 			uiInstance.getDriver(), MyProfilePage.class);
 	ConfigurationPage configurationPage;
 	Home home;
+	
+	String firstname = "testFirstName";
+	String lastname = "testLastName";  
+	String email = "test@testing.com";
+
 
 	public MyProfileCases(String browserType) {
 		super(BrowserType.FIREFOX);		
@@ -34,13 +39,17 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 	
 	/**
 	 * This test case is the equivalent to the Testlink id: MIRO'
-	 */
-	@Test(groups = { "Positive" },priority = 0)
-	public void editMyProfile() {
-		using(myProfilePage = home
-				.goMyProfilePage(uiInstance.getDriver())
-				.editMyProfile("Marcos","Castro","mcastro@hotmail.com"))
-		.check(myProfilePage.editUserMessageIsDisplayed(uiInstance.getDriver()));
-	}
+	 */ 
+	@Test(groups = { "Positive" },priority = 0) 
+	public void editMyProfile() { 
+		using(myProfilePage = home  
+				.goMyProfilePage(uiInstance.getDriver()) 
+				.editMyProfile(firstname,lastname,email))
+		.check(myProfilePage.userIsEdited(uiInstance.getDriver(), firstname, lastname, email))
+		
+		.andUsing(myProfilePage.editMyProfile("admin", "user", "")) 
+		.check(myProfilePage.userIsEdited(uiInstance.getDriver(), "admin", "user", ""));
+		
+	} 
 
-}
+} 
