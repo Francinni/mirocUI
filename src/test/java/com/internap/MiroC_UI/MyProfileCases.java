@@ -75,10 +75,15 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 				.editMyProfile(firstname,lastname,email))
 				
 		.check(myProfilePage.userIsEdited(uiInstance.getDriver(), firstname, lastname, email),
-				myProfilePage.verifyUserInfoOnHeader(uiInstance.getDriver(), firstname, lastname));
+				myProfilePage.verifyUserInfoOnHeader(uiInstance.getDriver(), firstname, lastname))
 		
+		.andUsing(loginPage = home  
+				.goLogOut(uiInstance.getDriver()).login(Common.adminUserName, Common.passWord))
+				.check(myProfilePage.verifyUserInfoOnHeader(uiInstance.getDriver(), firstname, lastname));
+				
 	} 
- 
+	
+	
 	
 
 } 

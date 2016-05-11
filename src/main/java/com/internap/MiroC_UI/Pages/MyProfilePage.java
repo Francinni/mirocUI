@@ -10,6 +10,7 @@ import org.testng.Assert;
 
 import com.internap.MiroC_UI.Common.MyProjPage;
 import com.internap.MiroC_UI.Common.PageUtils;
+import com.internap.MiroC_UI.Home.Home;
 import com.ts.commons.Validator;
 
 public class MyProfilePage extends MyProjPage {
@@ -89,8 +90,7 @@ public class MyProfilePage extends MyProjPage {
 				
 				boolean theHeaderIsTheSame = PageUtils.isElementPresent(driver, By.xpath(ruta));
 				Assert.assertTrue(theHeaderIsTheSame,"Header and user info are not the same");
-				
-				//Falta agreagar login and logout
+
 			}
 		};
 	}
