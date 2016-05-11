@@ -180,13 +180,14 @@ public class PortSecurityPage extends MyProjPage {
 	}
 	
 	// Validator for Port security
-		public Validator existentPortSecurity(final WebDriver driver) {
+		public Validator existentPortSecurity(final WebDriver driver,final String sendValue) {
 			return new Validator() {
 			
 				@Override
 				public void Validate() {
-
-					boolean thereIsAnSuccessfulMessage = PageUtils.isElementPresent(driver, By.xpath(".//div[@class='ng-scope']/div[@ng-show='messages.length > 0']/p"));
+					String xpath=".//p[contains(.,'"+sendValue+" is a duplicate')]";
+					WebElement element= driver.findElement(By.xpath(xpath));
+					boolean thereIsAnSuccessfulMessage = PageUtils.isElementPresent(driver, element);
 					Assert.assertTrue(thereIsAnSuccessfulMessage);
 				}
 			};
