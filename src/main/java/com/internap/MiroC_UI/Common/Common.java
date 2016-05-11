@@ -17,5 +17,21 @@ public interface Common {
 	 */
 	public final String passWord = "password";
 	
+	/**
+	 * Common userName is the username for mirousers role automation testing
+	 */
+	public final String userUserName = "user";
+	
+	/**
+	 * Common passWord is the password of the user for mirousers role automation testing
+	 */
+	public final String userPassWord = "Internap01";
+	
+	/**
+	 * Common newPassword is the password use to change the current password automation testing
+	 */
+	public final String newPassWord = "123456";
+	
+	
 	
 }

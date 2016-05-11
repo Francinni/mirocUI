@@ -39,36 +39,15 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 		home = PageFactory.initElements(uiInstance.getDriver(), Home.class);
 	}
 	
+	
+	 ////////////////////////////////////////////////////////-----ACCOUNT INFO-------/////////////////////////////////////////////////////////////////////////
+	
 	/**
-	 * This test case is the equivalent to the Testlink id: MBOX-275- Change User Admin Info
+	 * This test case is the equivalent to the Testlink id:
+	 * MBOX-275- Change User Admin Info && 
+	 * MBOX-335- New user info is shown after some changes were performed
 	 */ 
 	@Test(groups = { "Positive" },priority = 0) 
-	public void editMyProfile() { 
-		using(myProfilePage = home  
-				.goMyProfilePage(uiInstance.getDriver()) 
-				.editMyProfile(firstname,lastname,email))
-		.check(myProfilePage.userIsEdited(uiInstance.getDriver(), firstname, lastname, email));
-		
-		//.andUsing(myProfilePage.editMyProfile("admin", "user", ""))
-		//.check(myProfilePage.userIsEdited(uiInstance.getDriver(), "admin", "user", ""));
-		
-	} 
-	
-	/**
-	 * This test case is the equivalent to the Testlink id: MBOX-588- User cannot change the username
-	 */
-	@Test(groups = { "Positive" }) 
-	public void checkUsernameFieldIsDisabled() { 
-		using(myProfilePage = home  
-				.goMyProfilePage(uiInstance.getDriver()))
-		.check(myProfilePage.usernameFieldIsDisabled(uiInstance.getDriver()));		
-	} 
-	
-	
-	/**
-	 * This test case is the equivalent to the Testlink id: MBOX-335- New user info is shown after some changes were performed
-	 */ 
-	@Test(groups = { "Positive" }) 
 	public void checkHeaderInfo() { 
 		using(myProfilePage = home  
 				.goMyProfilePage(uiInstance.getDriver()) 
@@ -80,10 +59,61 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 		.andUsing(loginPage = home  
 				.goLogOut(uiInstance.getDriver()).login(Common.adminUserName, Common.passWord))
 				.check(myProfilePage.verifyUserInfoOnHeader(uiInstance.getDriver(), firstname, lastname));
+		
+		//.andUsing(myProfilePage.editMyProfile("admin", "user", ""))
+		//.check(myProfilePage.userIsEdited(uiInstance.getDriver(), "admin", "user", ""));
 				
 	} 
 	
+	/**
+	 * This test case is the equivalent to the Testlink id: MBOX-588- User cannot change the username
+	 */
+	@Test(groups = { "Positive" },dependsOnMethods = "checkHeaderInfo") 
+	public void checkUsernameFieldIsDisabled() { 
+		using(myProfilePage = home  
+				.goMyProfilePage(uiInstance.getDriver()))
+		.check(myProfilePage.usernameFieldIsDisabled(uiInstance.getDriver()));		
+	} 
 	
 	
+	/**
+	 * This test case is the equivalent to the Testlink id: MBOX-590- Account info validates empty values
+	 */ 
+	@Test(groups = { "Negative" },dependsOnMethods = "checkUsernameFieldIsDisabled") 
+	public void verifyEmptyValues() { 
+		using(myProfilePage 
+				.editMyProfile("","",""))
+		.check(myProfilePage.validateEmptyValues(uiInstance.getDriver()));
+
+	} 
+	
+	 ////////////////////////////////////////////////////////-----CHANGE PASSWORD-------/////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * This test case is the equivalent to the Testlink id: 
+	 * MBOX-334- User can login with the new password after it was changed
+	 * MBOX-272- Change user password
+	 */ 
+	@Test(groups = { "Positive" }) 
+	public void verifyChangePassword() { 
+		using(myProfilePage = home  
+				.goMyProfilePage(uiInstance.getDriver())
+				.goChangePassword(uiInstance.getDriver())
+				.changePassword(Common.passWord, Common.newPassWord, Common.newPassWord))
+		.check(myProfilePage.passwordIsChanged(uiInstance.getDriver()))
+		
+		.andUsing(loginPage = home  
+				.goLogOut(uiInstance.getDriver())
+				.login(Common.adminUserName, Common.newPassWord))
+				.check(loginPage.successfulMessageMustBePresent())
+				
+		.andUsing(myProfilePage = home  
+				.goMyProfilePage(uiInstance.getDriver())
+				.goChangePassword(uiInstance.getDriver())
+				.changePassword(Common.newPassWord, Common.passWord, Common.passWord))
+		.check(myProfilePage.passwordIsChanged(uiInstance.getDriver()));
+
+		
+	} 
 
 } 

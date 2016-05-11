@@ -39,6 +39,29 @@ public class MyProfilePage extends MyProjPage {
 	@FindBy (xpath = "//span[@class= 'username username-hide-on-mobile ng-binding']")
 	private WebElement Header;
 	
+	@FindBy (xpath = "//a[text()='Change Password']")
+	private WebElement changePassword;
+	
+	@FindBy (xpath = "//input[@name = 'oldPassword']")
+	private WebElement oldPassword;
+	
+	@FindBy (xpath = "//input[@name = 'password']")
+	private WebElement password;
+	
+	@FindBy (xpath = "//input[@name = 'passwordConfirm']")
+	private WebElement passwordConfirm;
+	
+	@FindBy(xpath = "(//button[text()='Submit'])[2]")
+	private WebElement submitPassword;
+	
+	@FindBy(xpath = "(//button[text()='Cancel'])[2]")
+	private WebElement cancelPassword;
+	
+	
+	
+	
+	
+	
 	public MyProfilePage editMyProfile ( String firstname, String lastname, String email){
 		
 		this.firstname.clear();	
@@ -65,8 +88,7 @@ public class MyProfilePage extends MyProjPage {
 			public void Validate() {							
 				boolean thereIsAnSuccessfulMessage = PageUtils.isElementPresent(driver, By.xpath("//p[text()='User successfully edited']"));
 				Assert.assertTrue(thereIsAnSuccessfulMessage,"Succesful message is not displayed");
-				boolean theValuesWereInserted = isInserted(first,last,em);
-				Assert.assertTrue(theValuesWereInserted,"Values were not edited"); 
+
 			}
 		};
 	}
@@ -94,7 +116,50 @@ public class MyProfilePage extends MyProjPage {
 			}
 		};
 	}
-
 	
+	public Validator validateEmptyValues(final WebDriver driver) {
+		return new Validator() {
+			@Override
+			public void Validate() {							
+				boolean emptyValuesFirstnameMessage = PageUtils.isElementPresent(driver, By.xpath("//ng-messages[@for = 'signupForm.firstname.$error']/p[contains(.,'This value is required')]"));
+				Assert.assertTrue(emptyValuesFirstnameMessage,"Empty values messages are not displayed");
+				boolean emptyValuesLastnameMessage = PageUtils.isElementPresent(driver, By.xpath("//ng-messages[@for = 'signupForm.lastname.$error']/p[contains(.,'This value is required')]"));
+				Assert.assertTrue(emptyValuesLastnameMessage,"Empty values messages are not displayed");
+ 
+			}
+		};
+	}
+	
+	                         //CHANGE PASSWORD
+	
+	public MyProfilePage goChangePassword (WebDriver driver){		
+		this.changePassword.click();
+		return PageFactory.initElements(driver, MyProfilePage.class);		
+	}
+	
+	
+	public MyProfilePage changePassword ( String oldPass, String pass, String passConfirm){
+			
+			this.oldPassword.clear();	
+			this.password.clear();
+			this.passwordConfirm.clear();
+			this.oldPassword.sendKeys(oldPass);
+			this.password.sendKeys(pass); 		
+			this.passwordConfirm.sendKeys(passConfirm);  
+			this.submitPassword.click();
+			return this;   
+		}
+	
+
+	public Validator passwordIsChanged(final WebDriver driver) {
+		return new Validator() {
+			@Override
+			public void Validate() {							
+				boolean thereIsAnSuccessfulMessage = PageUtils.isElementPresent(driver, By.xpath("//p[text()='User password changed']"));
+				Assert.assertTrue(thereIsAnSuccessfulMessage,"Succesful message for password changed is not displayed");
+
+			}
+		};
+	}
 	
 }
