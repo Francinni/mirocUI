@@ -40,21 +40,21 @@ public class PortSecurityTestCases extends MyProjTestCaseUtils {
 		using(portSecurityPage = home
 				.goConfigurationTab(uiInstance.getDriver())
 				.goPortSecurity(uiInstance.getDriver())
-				.addPortSecurity("1234"))
+				.addPortSecurity(uiInstance.getDriver(),"720"))
 				.check(portSecurityPage.assignmentListMustBePresent(uiInstance.getDriver()));
 	}	
 
 	/**
 	 * This test case is the equivalent to the Testlink id: MIRO'
-    */
+ */ 
 	@Test(groups = { "Positive", "editPortSecurity" },  dependsOnMethods = "addPortSecurity")
 	public void editPortSecurity() {
 
 		using(portSecurityPage
-				.editPortSecurity("1239")
+				.editPortSecurity(uiInstance.getDriver(),"720","723")
 		).check(portSecurityPage.assignmentListMustBePresent(uiInstance.getDriver()));
 
-	}	 
+	}	   
 	
 	/**
 	 * This test case is the equivalent to the Testlink id: MIRO'
@@ -63,9 +63,46 @@ public class PortSecurityTestCases extends MyProjTestCaseUtils {
 	public void deletePortSecurity() {
 
 		using(portSecurityPage
-				.deletePortSecurity("1239")
+				.deletePortSecurity(uiInstance.getDriver(),"723")
 		).check(portSecurityPage.assignmentListMustBePresent(uiInstance.getDriver()));
 
 	}	 
+	
+	
+	/**
+	 * This test case is the equivalent to the Testlink id: MIRO'
+    */
+	@Test(groups = { "Positive", "addAllowedNetwork" }, dependsOnMethods = "deletePortSecurity")
+	public void addAllowedNetwork() {
+
+		using(portSecurityPage
+				.addAllowedNetwork(uiInstance.getDriver(),"12.45.67.78/45")
+		).check(portSecurityPage.assignmentListMustBePresent(uiInstance.getDriver()));
+
+	}
+	
+	/**
+	 * This test case is the equivalent to the Testlink id: MIRO'
+    */
+	@Test(groups = { "Positive", "editAllowedNetwork" }, dependsOnMethods = "addAllowedNetwork")
+	public void editAllowedNetwork() {
+
+		using(portSecurityPage
+				.editAllowedNetwork(uiInstance.getDriver(),"12.45.67.78/45", "55.77.88.99/45")
+		).check(portSecurityPage.assignmentListMustBePresent(uiInstance.getDriver()));
+
+	}
+	
+	/**
+	 * This test case is the equivalent to the Testlink id: MIRO'
+    */
+	@Test(groups = { "Positive", "deleteAllowedNetwork" }, dependsOnMethods = "editAllowedNetwork")
+	public void deleteAllowedNetwork() {
+
+		using(portSecurityPage
+				.deleteAllowedNetwork(uiInstance.getDriver(), "55.77.88.99/45")
+		).check(portSecurityPage.assignmentListMustBePresent(uiInstance.getDriver()));
+
+	}
 
 }
