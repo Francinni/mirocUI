@@ -46,4 +46,50 @@ public class EditUserTestCases extends MyProjTestCaseUtils {
 				.check(editUserPage.assignmentListMustBePresent(uiInstance.getDriver()));
 	}
 	
+	
+	/**
+	 * This test case is the equivalent to the Testlink id: MIRO'
+    */
+	@Test(groups = { "Positive", "resetUser" },  dependsOnMethods = "addUser")
+	public void resetUserPassword(){
+		
+		using(editUserPage
+				.resetPassword()
+		).check(editUserPage.assignmentListMustBePresent(uiInstance.getDriver()));
+	}
+	
+	
+	@Test(groups = { "Positive", "resetUser" },  dependsOnMethods = "resetUserPassword")
+	public void manualResetUserPassword(){
+		
+		using(editUserPage
+				.manualResetPassword("123456", "123456")
+		).check(editUserPage.assignmentListMustBePresent(uiInstance.getDriver()));
+	}
+	
+	
+	/**
+	 * This test case is the equivalent to the Testlink id: MIRO'
+    */
+	@Test(groups = { "Positive", "editUser" },  dependsOnMethods = "manualResetUserPassword")
+	public void editUser() {
+
+		using(editUserPage
+				.editUser("testNew", "testNew", false)
+		).check(editUserPage.assignmentListMustBePresent(uiInstance.getDriver()));
+
+	}	
+	
+	/**
+	 * This test case is the equivalent to the Testlink id: MIRO'
+    */
+	@Test(groups = { "Positive", "deleteUser" },  dependsOnMethods = "editUser")
+	public void deleteUser() {
+
+		using(editUserPage
+				.deleteUser()
+		).check(editUserPage.assignmentListMustBePresent(uiInstance.getDriver()));
+
+	}	
+	
 }

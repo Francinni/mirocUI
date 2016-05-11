@@ -17,13 +17,13 @@ public class EditUserPage extends MyProjPage {
 	@FindBy(xpath = "html/body/div[4]/div[2]/div/div[2]/div/div/div[4]/div/div/div[1]/div[2]/a")
 	private WebElement addUserButton;
 	
-	@FindBy(xpath = "html/body/div[4]/div[2]/div/div[2]/div/div/div[4]/div/div/div[2]/div/table/tbody/tr[2]/td[6]/a[1]")
+	@FindBy(xpath = ".//tr[@ng-repeat='user in users']/td[1][contains(.,'testAuto')]/following-sibling::td/a[1]/i")
 	private WebElement editUserButton;
 	
-	@FindBy(xpath = "html/body/div[4]/div[2]/div/div[2]/div/div/div[4]/div/div/div[2]/div/table/tbody/tr[2]/td[6]/a[2]")
+	@FindBy(xpath = ".//tr[@ng-repeat='user in users']/td[1][contains(.,'testAuto')]/following-sibling::td/a[2]/i")
 	private WebElement resetPasswordButton;
 	
-	@FindBy(xpath = "html/body/div[4]/div[2]/div/div[2]/div/div/div[4]/div/div/div[2]/div/table/tbody/tr[2]/td[6]/a[3]")
+	@FindBy(xpath = ".//tr[@ng-repeat='user in users']/td[1][contains(.,'testAuto')]/following-sibling::td/a[3]/i")
 	private WebElement deleteUserButton;
 	
 	//botones secundarios
@@ -34,7 +34,7 @@ public class EditUserPage extends MyProjPage {
 	private WebElement cancelUserButton;
 	
 	//campos de texto utilizados al crear un user
-	@FindBy(xpath = ".//*[@id='username']/div[1]/div[1]/div/input")
+	@FindBy(xpath = ".//*[@id='username']")
 	private WebElement userNameField;
 	
 	@FindBy(xpath = ".//*[@id='addUserForm']/div[1]/div[2]/div/input")
@@ -49,8 +49,11 @@ public class EditUserPage extends MyProjPage {
 
 	//campos utilizados para el resetear user pass
 	
-	@FindBy(xpath = ".//*[@id='tab_15_1']/div/div/form/div[3]/button[2]")
+	@FindBy(xpath = ".//*[@id='tab_15_1']/div/div/form/div[3]/button[2]")						
 	private WebElement updateResetButton;
+	
+	@FindBy(xpath = ".//*[@id='tab_15_2']/div/div/form/div[3]/button[2]")						
+	private WebElement manualUpdateResetButton;
 	
 	@FindBy(xpath = ".//*[@id='tab_15_1']/div/div/form/div[3]/button[1]")
 	private WebElement cancelResetButton;
@@ -63,6 +66,16 @@ public class EditUserPage extends MyProjPage {
 	
 	@FindBy(xpath = "html/body/div[4]/div[2]/div/div[2]/div/div/div[3]/div/div/div[2]/div/ul/li[2]/a")
 	private WebElement userResetButton;
+	
+	@FindBy(xpath = ".//*[@id='tab_15_2']/div/div/form/div[1]/div/input")
+	private WebElement newPassword;
+	
+	@FindBy(xpath = ".//*[@id='tab_15_2']/div/div/form/div[2]/div/input")
+	private WebElement confirmPassword;
+	
+	
+	
+	
 	
 	@Override
 	public MyProjPage and() {
@@ -77,12 +90,11 @@ public class EditUserPage extends MyProjPage {
 	}
 	
 	
-	//metodos
+	//methods
 	public void clearFields(){
 		this.userNameField.clear();
 		this.firstNameField.clear();
-		this.lastNameField.clear();
-		this.adminCheck.clear();		
+		this.lastNameField.clear();		
 	}
 	
 	//metodo utilizado para crear un nuevo usuario
@@ -94,6 +106,43 @@ public class EditUserPage extends MyProjPage {
 		this.lastNameField.sendKeys(lastName);
 		this.adminCheck.equals(admin);
 		this.saveUserButton.click();
+		return this;
+	}
+	
+	//this method allows edit an user
+	public EditUserPage editUser (String firstName, String lastName, boolean admin){
+		this.editUserButton.click();
+		
+		this.firstNameField.clear();
+		this.lastNameField.clear();	
+		
+		this.firstNameField.sendKeys(firstName);
+		this.lastNameField.sendKeys(lastName);
+		this.adminCheck.equals(admin);
+		this.saveUserButton.click();
+		return this;
+	}
+	
+	
+	public EditUserPage deleteUser(){
+		this.deleteUserButton.click();
+		return this;
+	}
+	
+	public EditUserPage resetPassword(){
+		this.resetPasswordButton.click();
+		this.systemResetButton.click();
+		this.generatePasswordButton.click();
+		this.updateResetButton.click();
+		return this;
+	}
+	
+	public EditUserPage manualResetPassword(String newPass, String confirmPass){
+		this.resetPasswordButton.click();
+		this.userResetButton.click();
+		this.newPassword.sendKeys(newPass);
+		this.confirmPassword.sendKeys(confirmPass);
+		this.manualUpdateResetButton.click();
 		return this;
 	}
 	

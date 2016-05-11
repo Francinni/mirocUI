@@ -24,6 +24,9 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 	String firstname = "testFirstName";
 	String lastname = "testLastName";  
 	String email = "test@testing.com";
+	
+	String firstname1 = "admin";
+	String lastname2 = "user";
 
 
 	public MyProfileCases(String browserType) {
@@ -47,8 +50,8 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 				.editMyProfile(firstname,lastname,email))
 		.check(myProfilePage.userIsEdited(uiInstance.getDriver(), firstname, lastname, email))
 		
-		.andUsing(myProfilePage.editMyProfile("admin", "user", "")) 
-		.check(myProfilePage.userIsEdited(uiInstance.getDriver(), "admin", "user", ""));
+		.andUsing(myProfilePage.editMyProfile(firstname1, lastname2, "")) 
+		.check(myProfilePage.userIsEdited(uiInstance.getDriver(), firstname1, lastname2, ""));
 		
 	} 
 

@@ -38,10 +38,12 @@ public class MyProfilePage extends MyProjPage {
 	public MyProfilePage editMyProfile ( String firstname, String lastname, String email){
 		
 		this.firstname.clear();	
-		this.firstname.sendKeys(firstname);
 		this.lastname.clear();
-		this.lastname.sendKeys(lastname); 
 		this.email.clear();
+		this.firstname.sendKeys(firstname);
+		
+		this.lastname.sendKeys(lastname); 
+		
 		this.email.sendKeys(email);  
 		this.submit.click();
 		return this;   
