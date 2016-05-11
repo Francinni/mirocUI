@@ -166,8 +166,8 @@ public class PortSecurityPage extends MyProjPage {
 		return size;
 	}
 
-	// Validator for Port security
-	public Validator assignmentListMustBePresent(final WebDriver driver) {
+	// Validator for successful message on Port security
+	public Validator successfulMessageShouldBePresented(final WebDriver driver) {
 		return new Validator() {
 		
 			@Override
@@ -178,5 +178,18 @@ public class PortSecurityPage extends MyProjPage {
 			}
 		};
 	}
+	
+	// Validator for Port security
+		public Validator existentPortSecurity(final WebDriver driver) {
+			return new Validator() {
+			
+				@Override
+				public void Validate() {
+
+					boolean thereIsAnSuccessfulMessage = PageUtils.isElementPresent(driver, By.xpath(".//div[@class='ng-scope']/div[@ng-show='messages.length > 0']/p"));
+					Assert.assertTrue(thereIsAnSuccessfulMessage);
+				}
+			};
+		}
 
 }

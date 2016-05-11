@@ -47,7 +47,7 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 	 * MBOX-275- Change User Admin Info && 
 	 * MBOX-335- New user info is shown after some changes were performed
 	 */ 
-	@Test(groups = { "Positive" },priority = 0) 
+	@Test(groups = { "Positive", "checkHeaderInfo" },priority = 0) 
 	public void checkHeaderInfo() { 
 		using(myProfilePage = home  
 				.goMyProfilePage(uiInstance.getDriver()) 
@@ -66,9 +66,20 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 	} 
 	
 	/**
+	 * This test case is the equivalent to the Testlink id: MBOX-590- Account info validates empty values
+	 */ 
+	@Test(groups = { "Positive", "verifyEmptyValues"},dependsOnMethods = "checkHeaderInfo") 
+	public void verifyEmptyValues() { 
+		using(myProfilePage 
+				.editMyProfile("","",""))
+		.check(myProfilePage.validateEmptyValues(uiInstance.getDriver()));
+
+	} 
+	
+	/**
 	 * This test case is the equivalent to the Testlink id: MBOX-588- User cannot change the username
 	 */
-	@Test(groups = { "Positive" },dependsOnMethods = "checkHeaderInfo") 
+	@Test(groups = { "Positive", "checkUsernameFieldIsDisabled" },dependsOnMethods = "verifyEmptyValues") 
 	public void checkUsernameFieldIsDisabled() { 
 		using(myProfilePage = home  
 				.goMyProfilePage(uiInstance.getDriver()))
@@ -76,16 +87,7 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 	} 
 	
 	
-	/**
-	 * This test case is the equivalent to the Testlink id: MBOX-590- Account info validates empty values
-	 */ 
-	@Test(groups = { "Negative" },dependsOnMethods = "checkUsernameFieldIsDisabled") 
-	public void verifyEmptyValues() { 
-		using(myProfilePage 
-				.editMyProfile("","",""))
-		.check(myProfilePage.validateEmptyValues(uiInstance.getDriver()));
-
-	} 
+	
 	
 	 ////////////////////////////////////////////////////////-----CHANGE PASSWORD-------/////////////////////////////////////////////////////////////////////////
 
@@ -94,7 +96,7 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 	 * MBOX-334- User can login with the new password after it was changed
 	 * MBOX-272- Change user password
 	 */ 
-	@Test(groups = { "Positive" }) 
+	@Test(groups = { "Positive", "verifyChangePassword" },dependsOnMethods = "checkUsernameFieldIsDisabled") 
 	public void verifyChangePassword() { 
 		using(myProfilePage = home  
 				.goMyProfilePage(uiInstance.getDriver())
