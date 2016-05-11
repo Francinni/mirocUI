@@ -162,4 +162,26 @@ public class MyProfilePage extends MyProjPage {
 		};
 	}
 	
+	public Validator validateOldPasswordMatch(final WebDriver driver) {
+		return new Validator() {
+			@Override
+			public void Validate() {							
+				boolean wrongOldPasswordValidation = PageUtils.isElementPresent(driver, By.xpath("//p[contains(.,'old passwords do not match')]"));
+				Assert.assertTrue(wrongOldPasswordValidation,"Old Password validation message not displayed");
+ 
+			}
+		};
+	}
+	
+	public Validator oldAndNewPasswordShouldNotMatch(final WebDriver driver) {
+		return new Validator() {
+			@Override
+			public void Validate() {							
+				boolean validationMessage = PageUtils.isElementPresent(driver, By.xpath("//p[contains(.,'Old password and new password should not match')]"));
+				Assert.assertTrue(validationMessage,"Old and new password should not match message not dispplayed");
+ 
+			}
+		};
+	}
+	
 }

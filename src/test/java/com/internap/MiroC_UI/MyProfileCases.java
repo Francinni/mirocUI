@@ -48,7 +48,7 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 	 * MBOX-335- New user info is shown after some changes were performed
 	 */ 
 	@Test(groups = { "Positive", "checkHeaderInfo" },priority = 0) 
-	public void checkHeaderInfo() { 
+	public void editAccountInfo() { 
 		using(myProfilePage = home  
 				.goMyProfilePage(uiInstance.getDriver()) 
 				.editMyProfile(firstname,lastname,email))
@@ -68,7 +68,7 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 	/**
 	 * This test case is the equivalent to the Testlink id: MBOX-590- Account info validates empty values
 	 */ 
-	@Test(groups = { "Positive", "verifyEmptyValues"},dependsOnMethods = "checkHeaderInfo") 
+	@Test(groups = { "Negative", "verifyEmptyValues"},dependsOnMethods = "editAccountInfo") 
 	public void verifyEmptyValues() { 
 		using(myProfilePage 
 				.editMyProfile("","",""))
@@ -115,6 +115,30 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 				.changePassword(Common.newPassWord, Common.passWord, Common.passWord))
 		.check(myProfilePage.passwordIsChanged(uiInstance.getDriver()));
 
+		
+	} 
+	
+	/**
+	 * This test case is the equivalent to the Testlink id: 
+	 * MBOX-345- System validates that the correct old password was entered
+	 */ 
+	@Test(groups = { "Negative", "verifyOldPasswordValidation" },dependsOnMethods = "verifyChangePassword") 
+	public void verifyOldPasswordValidation() { 
+		using(myProfilePage 
+				.changePassword("wrongOldPassword", Common.newPassWord, Common.newPassWord))
+		.check(myProfilePage.validateOldPasswordMatch(uiInstance.getDriver()));				
+		
+	} 
+	
+	/**
+	 * This test case is the equivalent to the Testlink id: 
+	 * MBOX-576- Old and new password cannot be the same
+	 */ 
+	@Test(groups = { "Negative", "oldAndNewPasswordShouldNotMatch" },dependsOnMethods = "verifyOldPasswordValidation") 
+	public void oldAndNewPasswordShouldNotMatch() { 
+		using(myProfilePage 
+				.changePassword(Common.passWord, Common.passWord, Common.newPassWord))
+		.check(myProfilePage.oldAndNewPasswordShouldNotMatch(uiInstance.getDriver()));				
 		
 	} 
 
