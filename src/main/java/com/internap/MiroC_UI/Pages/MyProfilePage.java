@@ -1,11 +1,14 @@
 package com.internap.MiroC_UI.Pages;
 
+import java.io.File;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
+
 import com.internap.MiroC_UI.Common.MyProjPage;
 import com.internap.MiroC_UI.Common.PageUtils;
 import com.ts.commons.Validator;
@@ -36,6 +39,8 @@ public class MyProfilePage extends MyProjPage {
 	@FindBy (xpath = "//span[@class= 'username username-hide-on-mobile ng-binding']")
 	private WebElement Header;
 	
+	//Change Password xpaths
+	
 	@FindBy (xpath = "//a[text()='Change Password']")
 	private WebElement changePassword;
 	
@@ -53,6 +58,33 @@ public class MyProfilePage extends MyProjPage {
 	
 	@FindBy(xpath = "(//button[text()='Cancel'])[2]")
 	private WebElement cancelPassword;
+	
+	//Change Avatar xpaths
+	
+	@FindBy (xpath = "//a[text()='Change Avatar']")
+	private WebElement changeAvatar;
+	
+	@FindBy (xpath = "//div[@class='fileUpload btn btn-primary']")
+	private WebElement selectImageButton;
+	
+	@FindBy (xpath = "//input[@type='file']")
+	private WebElement selectImage;
+	
+	@FindBy (xpath = "//img[@id='headerProfileImg']")
+	private WebElement headerProfileImg;
+	
+	@FindBy (xpath = "//img[@id='profileImg']")
+	private WebElement profileImg;
+	
+	@FindBy (xpath = "//button[contains(.,'Upload')]")
+	private WebElement uploadButton;
+	
+	
+	@FindBy (xpath = "//button[contains(.,'Remove')]")
+	private WebElement removeButton;
+	
+	
+	 ////////////////////////////////////////////////////////-----ACCOUNT INFO-------/////////////////////////////////////////////////////////////////////////
 	
 	public MyProfilePage editMyProfile ( String firstname, String lastname, String email){
 		
@@ -122,7 +154,7 @@ public class MyProfilePage extends MyProjPage {
 		};
 	}
 	
-	//CHANGE PASSWORD
+	 ////////////////////////////////////////////////////////-----CHANGE PASSWORD-------/////////////////////////////////////////////////////////////////////////
 	
 	public MyProfilePage goChangePassword (WebDriver driver){		
 		this.changePassword.click();
@@ -175,6 +207,74 @@ public class MyProfilePage extends MyProjPage {
 				boolean validationMessage = PageUtils.isElementPresent(driver, By.xpath("//p[contains(.,'Old password and new password should not match')]"));
 				Assert.assertTrue(validationMessage,"Old and new password should not match message not dispplayed");
  
+			}
+		};
+	}
+	
+	public Validator retypePasswordAndPasswordShouldMatch(final WebDriver driver) {
+		return new Validator() {
+			@Override
+			public void Validate() {							
+				boolean validationMessage = PageUtils.isElementPresent(driver, By.xpath("//p[contains(.,'Password does not match')]"));
+				Assert.assertTrue(validationMessage,"Validation Message does not show up when retype password and new password do not match");
+ 
+			}
+		};
+	}
+	
+	public Validator validateEmptyValuesOnChangePassword(final WebDriver driver) {
+		return new Validator() {
+			@Override
+			public void Validate() {							
+				boolean emptyValuesOldPasswordMessage = PageUtils.isElementPresent(driver, By.xpath("//ng-messages[@for = 'passwordForm.oldPassword.$error']/p[contains(.,'This value is required')]"));
+				Assert.assertTrue(emptyValuesOldPasswordMessage,"Empty values messages are not displayed  in Change Password");
+				boolean emptyValuesNewPasswordMessage = PageUtils.isElementPresent(driver, By.xpath("//ng-messages[@for = 'passwordForm.password.$error']/p[contains(.,'This value is required')]"));
+				Assert.assertTrue(emptyValuesNewPasswordMessage,"Empty values messages are not displayed in Change Password");
+				boolean emptyValuesRetypedPasswordMessage = PageUtils.isElementPresent(driver, By.xpath("//ng-messages[@for = 'passwordForm.passwordConfirm.$error']/p[contains(.,'This value is required')]"));
+				Assert.assertTrue(emptyValuesRetypedPasswordMessage,"Empty values messages are not displayed in Change Password");
+ 
+			}
+		};
+	}
+	
+	 ////////////////////////////////////////////////////////-----CHANGE AVATAR-------/////////////////////////////////////////////////////////////////////////
+	
+	public MyProfilePage goChangeAvatar(WebDriver driver){		
+		this.changeAvatar.click();
+		return PageFactory.initElements(driver, MyProfilePage.class);		
+	}
+	
+	public MyProfilePage uploadImage (WebDriver driver, String imgPath){
+		String f = new File(imgPath).getAbsolutePath();
+		this.selectImage.sendKeys(f);
+		this.uploadButton.click();
+		return this;   
+	}
+	
+	public Validator avatarIsUploaded(final WebDriver driver) {
+		return new Validator() {
+			@Override
+			public void Validate() {							
+				boolean thereIsASuccessfulMessage = PageUtils.isElementPresent(driver, By.xpath("//p[text()='File uploaded']"));
+				Assert.assertTrue(thereIsASuccessfulMessage,"Succesful message for avatar changed is not displayed");					
+			}
+		};
+	}
+	
+	public MyProfilePage cancelUploadImage (WebDriver driver){
+		String f = new File("src/main/resources/newAvatar.jpg").getAbsolutePath();
+		this.selectImage.sendKeys(f);
+		this.removeButton.click();
+		return this;   
+	}
+	
+
+	public Validator avatarUploadIsCancelled(final WebDriver driver) {
+		return new Validator() {
+			@Override
+			public void Validate() {	
+				boolean imgCancelled = PageUtils.isElementPresent(driver, removeButton);
+				Assert.assertFalse(imgCancelled,"The image uploading was not cancelled");				
 			}
 		};
 	}
