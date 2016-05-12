@@ -71,8 +71,8 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 	/**
 	 * This test case is the equivalent to the Testlink id: MBOX-590- Account info validates empty values
 	 */ 
-	@Test(groups = { "Negative", "verifyEmptyValues"},dependsOnMethods = "editAccountInfo") 
-	public void verifyEmptyValues() { 
+	@Test(groups = { "Negative", "verifyEmptyValuesOnAccountInfo"},dependsOnMethods = "editAccountInfo") 
+	public void verifyEmptyValuesOnAccountInfo() { 
 		using(myProfilePage 
 				.editMyProfile("","",""))
 		.check(myProfilePage.validateEmptyValues(uiInstance.getDriver()));
@@ -82,7 +82,7 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 	/**
 	 * This test case is the equivalent to the Testlink id: MBOX-588- User cannot change the username
 	 */
-	@Test(groups = { "Positive", "checkUsernameFieldIsDisabled" },dependsOnMethods = "verifyEmptyValues") 
+	@Test(groups = { "Positive", "checkUsernameFieldIsDisabled" },dependsOnMethods = "verifyEmptyValuesOnAccountInfo") 
 	public void checkUsernameFieldIsDisabled() { 
 		using(myProfilePage = home  
 				.goMyProfilePage(uiInstance.getDriver()))
@@ -124,6 +124,7 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 	@Test(groups = { "Negative", "inCorrectOldPasswordWasEnteredValidation" },dependsOnMethods = "verifyChangePassword") 
 	public void inCorrectOldPasswordWasEnteredValidation() { 
 		using(myProfilePage 
+				.goChangePassword(uiInstance.getDriver())
 				.changePassword(uiInstance.getDriver(),"wrongOldPassword", Common.newPassWord, Common.newPassWord))
 		.check(myProfilePage.validateOldPasswordMatch(uiInstance.getDriver()));				
 		
@@ -136,10 +137,71 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 	@Test(groups = { "Negative", "oldAndNewPasswordShouldNotBeSameValidation" },dependsOnMethods = "inCorrectOldPasswordWasEnteredValidation") 
 	public void oldAndNewPasswordShouldNotBeSameValidation() { 
 		PageUtils.refreshPage(uiInstance.getDriver());
-		using(myProfilePage.goChangePassword(uiInstance.getDriver()).clearPassword(uiInstance.getDriver()) 
+		using(myProfilePage
+				.goChangePassword(uiInstance.getDriver())
+				.clearPassword(uiInstance.getDriver()) 
 				.changePassword(uiInstance.getDriver(),Common.passWord, Common.passWord, Common.passWord))
 		.check(myProfilePage.oldAndNewPasswordShouldNotMatch(uiInstance.getDriver()));		
 		
 	} 
+	
+	/**
+	 * This test case is the equivalent to the Testlink id: 
+	 * MBOX-577- User cannot change password if the re-type data does not match
+	 */ 
+	@Test(groups = { "Negative", "retypedPasswordAndNewPasswordShouldNotBeSameValidation" },dependsOnMethods = "oldAndNewPasswordShouldNotBeSameValidation") 
+	public void retypedPasswordAndNewPasswordShouldNotBeSameValidation() { 
+		PageUtils.refreshPage(uiInstance.getDriver());
+		using(myProfilePage
+				.goChangePassword(uiInstance.getDriver())
+				.clearPassword(uiInstance.getDriver()) 
+				.changePassword(uiInstance.getDriver(),Common.passWord, Common.newPassWord, "RetypedWrongPassword"))
+		.check(myProfilePage.retypePasswordAndPasswordShouldMatch(uiInstance.getDriver()));				
+		
+	}
 
+	/**
+	 * This test case is the equivalent to the Testlink id: MBOX-578- User cannot leave empty values
+	 */ 
+	@Test(groups = { "Negative", "verifyEmptyValuesOnChangePassword"},dependsOnMethods = "retypedPasswordAndNewPasswordShouldNotBeSameValidation") 
+	public void verifyEmptyValuesOnChangePassword() { 
+		using(myProfilePage
+				.goChangePassword(uiInstance.getDriver())
+				.clearPassword(uiInstance.getDriver()) 
+				.changePassword(uiInstance.getDriver(), "", "", ""))
+		.check(myProfilePage.validateEmptyValuesOnChangePassword(uiInstance.getDriver()));
+
+	} 
+	
+	 ////////////////////////////////////////////////////////-----CHANGE AVATAR-------/////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * This test case is the equivalent to the Testlink id: MBOX-579- User can change image profile
+	 */ 
+	@Test(groups = { "Positive", "updateImage"} ,dependsOnMethods = "verifyEmptyValuesOnChangePassword") 
+	public void updateImage() { 
+		using(myProfilePage = home
+				.goMyProfilePage(uiInstance.getDriver())
+				.goChangeAvatar(uiInstance.getDriver())
+				.uploadImage(uiInstance.getDriver(), "src/main/resources/newAvatar.jpg")) 				
+		.check(myProfilePage.avatarIsUploaded(uiInstance.getDriver()))
+		
+		.andUsing(myProfilePage
+				.uploadImage(uiInstance.getDriver(), "src/main/resources/originalAvatar.jpg")) 
+		.check(myProfilePage.avatarIsUploaded(uiInstance.getDriver()));
+
+	} 
+	
+	/**
+	 * This test case is the equivalent to the Testlink id: MBOX-584- Remove button deletes the selected image
+	 */ 
+	@Test(groups = { "Positive", "cancelUpdateImage"} ,dependsOnMethods = "updateImage") 
+	public void cancelUpdateImage() { 
+		using(myProfilePage = home
+				.goMyProfilePage(uiInstance.getDriver())
+				.goChangeAvatar(uiInstance.getDriver())
+				.cancelUploadImage(uiInstance.getDriver())) 				
+		.check(myProfilePage.avatarUploadIsCancelled(uiInstance.getDriver()));
+
+	} 
 } 

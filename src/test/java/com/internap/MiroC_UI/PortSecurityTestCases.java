@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 
 import com.internap.MiroC_UI.Common.Common;
 import com.internap.MiroC_UI.Common.InternapUI;
+import com.internap.MiroC_UI.Common.PageUtils;
 import com.internap.MiroC_UI.Home.ConfigurationPage;
 import com.internap.MiroC_UI.Home.Home;
 import com.internap.MiroC_UI.Home.LoginPage;
@@ -47,19 +48,40 @@ public class PortSecurityTestCases extends MyProjTestCaseUtils {
 	/**
 	 * This test case is the equivalent to the Testlink: MBOX-319:System validates if the user enter an existent trusted network or blocked port
     */
-	@Test(groups = { "Positive", "cannotAddExistentPortSecurity" }, dependsOnMethods = "addPortSecurity")
+	@Test(groups = { "Negative", "cannotAddExistentPortSecurity" }, dependsOnMethods = "addPortSecurity")
 	public void cannotAddExistentPortSecurity() {
-
+		PageUtils.refreshPage(uiInstance.getDriver());
 		using(portSecurityPage
 				.addPortSecurity(uiInstance.getDriver(),"720")
 		).check(portSecurityPage.existentPortSecurity(uiInstance.getDriver(),"720"));
+
+	}
+	
+	/**
+	 * This test case is the equivalent to the Testlink: MBOX-369:System validates if the user enter an invalid trusted network or blocked port
+    */
+	@Test(groups = { "Negative", "cannotAddExistentPortSecurity" }, dependsOnMethods = "cannotAddExistentPortSecurity")
+	public void cannotAddEmptyOrInvalidValuePortSecurity() {
+
+		using(portSecurityPage
+				.addPortSecurity(uiInstance.getDriver(),"")
+		).check(portSecurityPage.emptyValuesPortSecurity(uiInstance.getDriver(),""))
+		.andUsing(portSecurityPage
+				.addAllowedNetwork(uiInstance.getDriver(), "")
+		).check(portSecurityPage.emptyValuesPortSecurity(uiInstance.getDriver(),""))
+			.andUsing(portSecurityPage
+				.addAllowedNetwork(uiInstance.getDriver(), "test")
+		).check(portSecurityPage.emptyValuesPortSecurity(uiInstance.getDriver(),"test"))
+		.andUsing(portSecurityPage
+				.addPortSecurity(uiInstance.getDriver(),"-5")
+		).check(portSecurityPage.emptyValuesPortSecurity(uiInstance.getDriver(),"-5"));
 
 	}
 
 	/**
 	 * This test case is the equivalent to the Testlink: MBOX-318:User can update a blocked port
  */ 
-	@Test(groups = { "Positive", "editPortSecurity" },  dependsOnMethods = "cannotAddExistentPortSecurity")
+	@Test(groups = { "Positive", "editPortSecurity" },  dependsOnMethods = "cannotAddEmptyOrInvalidValuePortSecurity")
 	public void editPortSecurity() {
 
 		using(portSecurityPage
@@ -96,9 +118,9 @@ public class PortSecurityTestCases extends MyProjTestCaseUtils {
 	/**
 	 * This test case is the equivalent to the Testlink:  MBOX-319:System validates if the user enter an existent trusted network or blocked port
     */
-	@Test(groups = { "Positive", "cannotAddExistentAllowedNetwork" }, dependsOnMethods = "addAllowedNetwork")
+	@Test(groups = { "Negative", "cannotAddExistentAllowedNetwork" }, dependsOnMethods = "addAllowedNetwork")
 	public void cannotAddExistentAllowedNetwork() {
-
+		PageUtils.refreshPage(uiInstance.getDriver());
 		using(portSecurityPage
 				.addAllowedNetwork(uiInstance.getDriver(),"12.45.67.78/45")
 		).check(portSecurityPage.existentPortSecurity(uiInstance.getDriver(),"12.45.67.78/45"));
@@ -128,6 +150,26 @@ public class PortSecurityTestCases extends MyProjTestCaseUtils {
 		).check(portSecurityPage.successfulMessageShouldBePresented(uiInstance.getDriver()));
 
 	}
+	
+	/**
+	 * This test case is the equivalent to the Testlink: MBOX-346:System validates if the user not administrator is authorized for save/update trusted networks
+    */
+	@Test(groups = { "Positive", "userCannotAddUpdatePortSecurity" }, dependsOnMethods = "deleteAllowedNetwork")
+	public void userCannotAddUpdatePortSecurity() {
+
+		using(
+				loginPage = home  
+				.goLogOut(uiInstance.getDriver()).login(Common.userUserName, Common.passWord))
+				.check(loginPage.successfulMessageMustBePresent())
+		
+		.andUsing(
+				portSecurityPage = home
+						.goConfigurationTab(uiInstance.getDriver())
+						.goPortSecurity(uiInstance.getDriver())
+		).check(portSecurityPage.addPortIsDisabled(uiInstance.getDriver()));
+
+	}
+	
 	
 	
 	
