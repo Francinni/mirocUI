@@ -30,7 +30,7 @@ public class PortSecurityPage extends MyProjPage {
 
 	// Blocked Ports
 
-	@FindBy(xpath = "html/body/div[4]/div[2]/div/div[2]/div/div/div[2]/div/div/div[2]/div/form[2]/div[1]/div[2]/div/label")
+	@FindBy(xpath = ".//label[@ng-click='!auth.admin||addPort(portForm)'][contains(.,'Add')]/i")
 	private WebElement addPortButton;
 
 	@FindBy(xpath = "html/body/div[4]/div[2]/div/div[2]/div/div/div[2]/div/div/div[2]/div/form[2]/div[2]/div[1]/div/input")
@@ -202,5 +202,38 @@ public class PortSecurityPage extends MyProjPage {
 			}
 		};
 	}
+	
+	// Validator for Port security (Empty or invalid values)
+		public Validator emptyValuesPortSecurity(final WebDriver driver,
+				final String sendValue) {
+			return new Validator() {
+
+				@Override
+				public void Validate() {
+					String xpath = ".//p[contains(.,'This value is required')]";
+					String xpath2 = ".//p[contains(.,'Unable to save port security.  Please verify the inputs are correct.')]";
+					WebElement element;
+					if(sendValue.equals(""))
+					 element = driver.findElement(By.xpath(xpath));
+					else
+						element = driver.findElement(By.xpath(xpath2));
+					boolean thereIsAnSuccessfulMessage = PageUtils
+							.isElementPresent(driver, element);
+					Assert.assertTrue(thereIsAnSuccessfulMessage);
+				}
+			};
+		}
+		
+		public Validator addPortIsDisabled(final WebDriver driver) {
+			return new Validator() {
+				@Override
+				public void Validate() {	
+					String disabled = addPortButton.getAttribute("disabled");
+					Assert.assertNotNull(disabled,"The element is enabled");
+				}
+			};
+		}
+	
+	
 
 }
