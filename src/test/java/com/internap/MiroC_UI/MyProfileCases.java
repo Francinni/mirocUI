@@ -47,7 +47,7 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 	 * MBOX-275- Change User Admin Info && 
 	 * MBOX-335- New user info is shown after some changes were performed
 	 */ 
-	@Test(groups = { "Positive", "checkHeaderInfo" },priority = 0) 
+	@Test(groups = { "Positive", "editAccountInfo" },priority = 0) 
 	public void editAccountInfo() { 
 		using(myProfilePage = home  
 				.goMyProfilePage(uiInstance.getDriver()) 
@@ -58,10 +58,10 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 		
 		.andUsing(loginPage = home  
 				.goLogOut(uiInstance.getDriver()).login(Common.adminUserName, Common.passWord))
-				.check(myProfilePage.verifyUserInfoOnHeader(uiInstance.getDriver(), firstname, lastname));
+				.check(myProfilePage.verifyUserInfoOnHeader(uiInstance.getDriver(), firstname, lastname))
 		
-		//.andUsing(myProfilePage.editMyProfile("admin", "user", ""))
-		//.check(myProfilePage.userIsEdited(uiInstance.getDriver(), "admin", "user", ""));
+		.andUsing(myProfilePage.editMyProfile("admin", "user", ""))
+		.check(myProfilePage.userIsEdited(uiInstance.getDriver(), "admin", "user", ""));
 				
 	} 
 	
@@ -85,9 +85,7 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 				.goMyProfilePage(uiInstance.getDriver()))
 		.check(myProfilePage.usernameFieldIsDisabled(uiInstance.getDriver()));		
 	} 
-	
-	
-	
+		
 	
 	 ////////////////////////////////////////////////////////-----CHANGE PASSWORD-------/////////////////////////////////////////////////////////////////////////
 
@@ -101,7 +99,7 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 		using(myProfilePage = home  
 				.goMyProfilePage(uiInstance.getDriver())
 				.goChangePassword(uiInstance.getDriver())
-				.changePassword(Common.passWord, Common.newPassWord, Common.newPassWord))
+				.changePassword(uiInstance.getDriver(),Common.passWord, Common.newPassWord, Common.newPassWord))
 		.check(myProfilePage.passwordIsChanged(uiInstance.getDriver()))
 		
 		.andUsing(loginPage = home  
@@ -112,9 +110,8 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 		.andUsing(myProfilePage = home  
 				.goMyProfilePage(uiInstance.getDriver())
 				.goChangePassword(uiInstance.getDriver())
-				.changePassword(Common.newPassWord, Common.passWord, Common.passWord))
+				.changePassword(uiInstance.getDriver(),Common.newPassWord, Common.passWord, Common.passWord))
 		.check(myProfilePage.passwordIsChanged(uiInstance.getDriver()));
-
 		
 	} 
 	
@@ -122,10 +119,10 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 	 * This test case is the equivalent to the Testlink id: 
 	 * MBOX-345- System validates that the correct old password was entered
 	 */ 
-	@Test(groups = { "Negative", "verifyOldPasswordValidation" },dependsOnMethods = "verifyChangePassword") 
-	public void verifyOldPasswordValidation() { 
+	@Test(groups = { "Negative", "inCorrectOldPasswordWasEnteredValidation" },dependsOnMethods = "verifyChangePassword") 
+	public void inCorrectOldPasswordWasEnteredValidation() { 
 		using(myProfilePage 
-				.changePassword("wrongOldPassword", Common.newPassWord, Common.newPassWord))
+				.changePassword(uiInstance.getDriver(),"wrongOldPassword", Common.newPassWord, Common.newPassWord))
 		.check(myProfilePage.validateOldPasswordMatch(uiInstance.getDriver()));				
 		
 	} 
@@ -134,10 +131,11 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 	 * This test case is the equivalent to the Testlink id: 
 	 * MBOX-576- Old and new password cannot be the same
 	 */ 
-	@Test(groups = { "Negative", "oldAndNewPasswordShouldNotMatch" },dependsOnMethods = "verifyOldPasswordValidation") 
-	public void oldAndNewPasswordShouldNotMatch() { 
-		using(myProfilePage 
-				.changePassword(Common.passWord, Common.passWord, Common.newPassWord))
+	@Test(groups = { "Negative", "oldAndNewPasswordShouldNotBeSameValidation" },dependsOnMethods = "inCorrectOldPasswordWasEnteredValidation") 
+	public void oldAndNewPasswordShouldNotBeSameValidation() { 
+		PageUtils.refreshPage(uiInstance.getDriver());
+		using(myProfilePage.goChangePassword(uiInstance.getDriver()).clearPassword(uiInstance.getDriver()) 
+				.changePassword(uiInstance.getDriver(),Common.passWord, Common.passWord, Common.passWord))
 		.check(myProfilePage.oldAndNewPasswordShouldNotMatch(uiInstance.getDriver()));				
 		
 	} 

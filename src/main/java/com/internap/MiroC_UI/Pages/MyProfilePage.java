@@ -1,16 +1,13 @@
 package com.internap.MiroC_UI.Pages;
 
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
-
 import com.internap.MiroC_UI.Common.MyProjPage;
 import com.internap.MiroC_UI.Common.PageUtils;
-import com.internap.MiroC_UI.Home.Home;
 import com.ts.commons.Validator;
 
 public class MyProfilePage extends MyProjPage {
@@ -56,11 +53,6 @@ public class MyProfilePage extends MyProjPage {
 	
 	@FindBy(xpath = "(//button[text()='Cancel'])[2]")
 	private WebElement cancelPassword;
-	
-	
-	
-	
-	
 	
 	public MyProfilePage editMyProfile ( String firstname, String lastname, String email){
 		
@@ -130,7 +122,7 @@ public class MyProfilePage extends MyProjPage {
 		};
 	}
 	
-	                         //CHANGE PASSWORD
+	//CHANGE PASSWORD
 	
 	public MyProfilePage goChangePassword (WebDriver driver){		
 		this.changePassword.click();
@@ -138,17 +130,20 @@ public class MyProfilePage extends MyProjPage {
 	}
 	
 	
-	public MyProfilePage changePassword ( String oldPass, String pass, String passConfirm){
-			
-			this.oldPassword.clear();	
-			this.password.clear();
-			this.passwordConfirm.clear();
+	public MyProfilePage changePassword (WebDriver driver, String oldPass, String pass, String passConfirm){
 			this.oldPassword.sendKeys(oldPass);
 			this.password.sendKeys(pass); 		
 			this.passwordConfirm.sendKeys(passConfirm);  
 			this.submitPassword.click();
 			return this;   
 		}
+	
+	public MyProfilePage clearPassword (WebDriver driver){
+		this.oldPassword.clear();	
+		this.password.clear();
+		this.passwordConfirm.clear();
+		return this;   
+	}
 	
 
 	public Validator passwordIsChanged(final WebDriver driver) {
@@ -166,7 +161,7 @@ public class MyProfilePage extends MyProjPage {
 		return new Validator() {
 			@Override
 			public void Validate() {							
-				boolean wrongOldPasswordValidation = PageUtils.isElementPresent(driver, By.xpath("//p[contains(.,'old passwords do not match')]"));
+				boolean wrongOldPasswordValidation = PageUtils.isElementPresent(driver, By.xpath("//p[contains(.,'Change password failed for user with username admin old passwords do not match')]"));
 				Assert.assertTrue(wrongOldPasswordValidation,"Old Password validation message not displayed");
  
 			}
