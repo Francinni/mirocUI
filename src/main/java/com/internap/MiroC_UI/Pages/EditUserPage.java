@@ -1,8 +1,7 @@
 package com.internap.MiroC_UI.Pages;
 
+import org.testng.AssertJUnit;
 import java.util.concurrent.TimeUnit;
-
-import junit.framework.Assert;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -13,6 +12,8 @@ import com.internap.MiroC_UI.Common.MyProjPage;
 import com.internap.MiroC_UI.Common.PageUtils;
 import com.ts.commons.Validator;
 
+
+import org.testng.Assert;
 
 public class EditUserPage extends MyProjPage {
 	
@@ -76,9 +77,12 @@ public class EditUserPage extends MyProjPage {
 	@FindBy(xpath = ".//*[@id='tab_15_2']/div/div/form/div[2]/div/input")
 	private WebElement confirmPassword;
 	
+	@FindBy(xpath = ".//*[@id='tab_15_2']/div/div/form/div[1]/div/small")
+	private WebElement newPasswordValidator;
 	
-	
-	
+	@FindBy(xpath = ".//*[@id='tab_15_2']/div/div/form/div[2]/div/small[2]")
+	private WebElement confirmPasswordValidator;
+		
 	
 	@Override
 	public MyProjPage and() {
@@ -169,6 +173,32 @@ public class EditUserPage extends MyProjPage {
 			this.saveUserButton.click();
 			return this;
 		}
+		
+		//negative cases
+		
+		//password with less than 4 characters
+		public EditUserPage lessChangePassword(WebDriver driver, String newPassword, String confirmPass){
+			PageUtils.refreshPage(driver);
+			driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);			
+			this.resetPasswordButton.click();
+			this.userResetButton.click();
+			this.newPassword.sendKeys(newPassword);
+			this.confirmPassword.sendKeys(confirmPass);
+			this.manualUpdateResetButton.click();
+			return this;			
+		}
+		
+		//username with less tha 4 characters
+		public EditUserPage shortUserName(String user, String firstName, String lastName, boolean admin){			
+			this.addUserButton.click();
+			clearFields();
+			this.userNameField.sendKeys(user);
+			this.firstNameField.sendKeys(firstName);
+			this.lastNameField.sendKeys(lastName);
+			this.adminCheck.equals(admin);
+			this.saveUserButton.click();
+			return this;
+		}
 	
 	
 	//this method validates that the operation was successful
@@ -183,4 +213,32 @@ public class EditUserPage extends MyProjPage {
 			}
 		};
 	}	
+	
+	
+	//this method validates that the operation change password was successful
+	public Validator validationNewPass(final WebDriver driver) {
+		return new Validator() {
+			@Override
+			public void Validate() {							
+				boolean validationNewMessage = PageUtils.isElementPresent(driver, By.xpath(".//*[@id='tab_15_2']/div/div/form/div[1]/div/small[contains(.,'Password should contain at least 6 characters.')]"));
+				Assert.assertTrue(validationNewMessage,"Password validation messages are not displayed");
+				boolean validationConfirmMessage = PageUtils.isElementPresent(driver, By.xpath(".//*[@id='tab_15_2']/div/div/form/div[2]/div/small[2][contains(.,'Password does not match')]"));
+				Assert.assertTrue(validationConfirmMessage,"Password validation messages are not displayed");
+ 
+			}
+		};
+	}
+	
+	//this method validates that the operation create a user was successful
+		public Validator validationuserName(final WebDriver driver) {
+			return new Validator() {
+				@Override
+				public void Validate() {							
+					boolean validationNewMessage = PageUtils.isElementPresent(driver, By.xpath(".//*[@id='addUserForm']/div[1]/div[1]/div/ng-messages/div[contains(.,'Username is too short. Must be at least 4 characters')]"));
+					Assert.assertTrue(validationNewMessage,"Username validation messages are not displayed");
+	 
+				}
+			};
+		}
+		
 }

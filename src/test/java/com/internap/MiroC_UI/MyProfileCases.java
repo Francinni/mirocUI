@@ -114,8 +114,6 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 				.goChangePassword(uiInstance.getDriver())
 				.changePassword(uiInstance.getDriver(),Common.newPassWord, Common.passWord, Common.passWord))
 		.check(myProfilePage.passwordIsChanged(uiInstance.getDriver()));
-<<<<<<< HEAD
-=======
 		
 	} 
 	
@@ -140,8 +138,7 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 		PageUtils.refreshPage(uiInstance.getDriver());
 		using(myProfilePage.goChangePassword(uiInstance.getDriver()).clearPassword(uiInstance.getDriver()) 
 				.changePassword(uiInstance.getDriver(),Common.passWord, Common.passWord, Common.passWord))
-		.check(myProfilePage.oldAndNewPasswordShouldNotMatch(uiInstance.getDriver()));				
->>>>>>> 68e50698e0e6881e91089c876b288a534251c780
+		.check(myProfilePage.oldAndNewPasswordShouldNotMatch(uiInstance.getDriver()));		
 		
 	} 
 
