@@ -42,12 +42,24 @@ public class PortSecurityTestCases extends MyProjTestCaseUtils {
 				.goPortSecurity(uiInstance.getDriver())
 				.addPortSecurity(uiInstance.getDriver(),"720"))
 				.check(portSecurityPage.successfulMessageShouldBePresented(uiInstance.getDriver()));
-	}	
+	}
+	
+	/**
+	 * This test case is the equivalent to the Testlink: MBOX-319:System validates if the user enter an existent trusted network or blocked port
+    */
+	@Test(groups = { "Positive", "cannotAddExistentPortSecurity" }, dependsOnMethods = "addPortSecurity")
+	public void cannotAddExistentPortSecurity() {
+
+		using(portSecurityPage
+				.addPortSecurity(uiInstance.getDriver(),"720")
+		).check(portSecurityPage.existentPortSecurity(uiInstance.getDriver(),"720"));
+
+	}
 
 	/**
 	 * This test case is the equivalent to the Testlink: MBOX-318:User can update a blocked port
  */ 
-	@Test(groups = { "Positive", "editPortSecurity" },  dependsOnMethods = "addPortSecurity")
+	@Test(groups = { "Positive", "editPortSecurity" },  dependsOnMethods = "cannotAddExistentPortSecurity")
 	public void editPortSecurity() {
 
 		using(portSecurityPage
@@ -82,6 +94,18 @@ public class PortSecurityTestCases extends MyProjTestCaseUtils {
 	}
 	
 	/**
+	 * This test case is the equivalent to the Testlink:  MBOX-319:System validates if the user enter an existent trusted network or blocked port
+    */
+	@Test(groups = { "Positive", "cannotAddExistentAllowedNetwork" }, dependsOnMethods = "addAllowedNetwork")
+	public void cannotAddExistentAllowedNetwork() {
+
+		using(portSecurityPage
+				.addAllowedNetwork(uiInstance.getDriver(),"12.45.67.78/45")
+		).check(portSecurityPage.existentPortSecurity(uiInstance.getDriver(),"12.45.67.78/45"));
+
+	}
+	
+	/**
 	 * This test case is the equivalent to the Testlink: MBOX-316:User can update a trusted networks
     */
 	@Test(groups = { "Positive", "editAllowedNetwork" }, dependsOnMethods = "addAllowedNetwork")
@@ -105,16 +129,6 @@ public class PortSecurityTestCases extends MyProjTestCaseUtils {
 
 	}
 	
-	/**
-	 * This test case is the equivalent to the Testlink: MBOX-319:System validates if the user enter an existent trusted network or blocked port
-    */
-	@Test(groups = { "Positive", "cannotAddExistentPortSecurity" }, dependsOnMethods = "editAllowedNetwork")
-	public void cannotAddExistentPortSecurity() {
-
-		using(portSecurityPage
-				.deleteAllowedNetwork(uiInstance.getDriver(), "55.77.88.99/45")
-		).check(portSecurityPage.successfulMessageShouldBePresented(uiInstance.getDriver()));
-
-	}
+	
 	
 }

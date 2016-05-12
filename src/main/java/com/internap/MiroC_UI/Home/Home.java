@@ -5,7 +5,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import com.internap.MiroC_UI.Common.InternapUI;
 import com.internap.MiroC_UI.Common.MyProjPage;
 import com.internap.MiroC_UI.Pages.MyProfilePage;
 
@@ -68,8 +67,5 @@ public class Home extends MyProjPage {
 		this.myprofile.click();
 		return PageFactory.initElements(driver, MyProfilePage.class);		
 	}
-	
-	
-	
-	
+
 }
