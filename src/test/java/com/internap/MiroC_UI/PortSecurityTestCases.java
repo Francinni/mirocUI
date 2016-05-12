@@ -32,7 +32,7 @@ public class PortSecurityTestCases extends MyProjTestCaseUtils {
 	}
 
 	/**
-	 * This test case is the equivalent to the Testlink id: MIRO'
+	 * This test case is the equivalent to the Testlink: MBOX-311:User can add blocked ports
 	 */
 	@Test(groups = { "Positive",  "addPortSecurity" },priority = 0)
 	public void addPortSecurity() {
@@ -40,32 +40,81 @@ public class PortSecurityTestCases extends MyProjTestCaseUtils {
 		using(portSecurityPage = home
 				.goConfigurationTab(uiInstance.getDriver())
 				.goPortSecurity(uiInstance.getDriver())
-				.addPortSecurity("1234"))
-				.check(portSecurityPage.assignmentListMustBePresent(uiInstance.getDriver()));
+				.addPortSecurity(uiInstance.getDriver(),"720"))
+				.check(portSecurityPage.successfulMessageShouldBePresented(uiInstance.getDriver()));
 	}	
 
 	/**
-	 * This test case is the equivalent to the Testlink id: MIRO'
-    */
+	 * This test case is the equivalent to the Testlink: MBOX-318:User can update a blocked port
+ */ 
 	@Test(groups = { "Positive", "editPortSecurity" },  dependsOnMethods = "addPortSecurity")
 	public void editPortSecurity() {
 
 		using(portSecurityPage
-				.editPortSecurity("1239")
-		).check(portSecurityPage.assignmentListMustBePresent(uiInstance.getDriver()));
+				.editPortSecurity(uiInstance.getDriver(),"720","723")
+		).check(portSecurityPage.successfulMessageShouldBePresented(uiInstance.getDriver()));
 
-	}	 
+	}	   
 	
 	/**
-	 * This test case is the equivalent to the Testlink id: MIRO'
+	 * This test case is the equivalent to the Testlink: MBOX-315:User can delete a blocked port
     */
 	@Test(groups = { "Positive", "deletePortSecurity" }, dependsOnMethods = "editPortSecurity")
 	public void deletePortSecurity() {
 
 		using(portSecurityPage
-				.deletePortSecurity("1239")
-		).check(portSecurityPage.assignmentListMustBePresent(uiInstance.getDriver()));
+				.deletePortSecurity(uiInstance.getDriver(),"723")
+		).check(portSecurityPage.successfulMessageShouldBePresented(uiInstance.getDriver()));
 
 	}	 
+	
+	
+	/**
+	 * This test case is the equivalent to the Testlink: MBOX-306:User can add a trusted network'
+    */
+	@Test(groups = { "Positive", "addAllowedNetwork" }, dependsOnMethods = "deletePortSecurity")
+	public void addAllowedNetwork() {
 
+		using(portSecurityPage
+				.addAllowedNetwork(uiInstance.getDriver(),"12.45.67.78/45")
+		).check(portSecurityPage.successfulMessageShouldBePresented(uiInstance.getDriver()));
+
+	}
+	
+	/**
+	 * This test case is the equivalent to the Testlink: MBOX-316:User can update a trusted networks
+    */
+	@Test(groups = { "Positive", "editAllowedNetwork" }, dependsOnMethods = "addAllowedNetwork")
+	public void editAllowedNetwork() {
+
+		using(portSecurityPage
+				.editAllowedNetwork(uiInstance.getDriver(),"12.45.67.78/45", "55.77.88.99/45")
+		).check(portSecurityPage.successfulMessageShouldBePresented(uiInstance.getDriver()));
+
+	}
+	
+	/**
+	 * This test case is the equivalent to the Testlink: MBOX-313:User can delete a trusted network
+    */
+	@Test(groups = { "Positive", "deleteAllowedNetwork" }, dependsOnMethods = "editAllowedNetwork")
+	public void deleteAllowedNetwork() {
+
+		using(portSecurityPage
+				.deleteAllowedNetwork(uiInstance.getDriver(), "55.77.88.99/45")
+		).check(portSecurityPage.successfulMessageShouldBePresented(uiInstance.getDriver()));
+
+	}
+	
+	/**
+	 * This test case is the equivalent to the Testlink: MBOX-319:System validates if the user enter an existent trusted network or blocked port
+    */
+	@Test(groups = { "Positive", "cannotAddExistentPortSecurity" }, dependsOnMethods = "editAllowedNetwork")
+	public void cannotAddExistentPortSecurity() {
+
+		using(portSecurityPage
+				.deleteAllowedNetwork(uiInstance.getDriver(), "55.77.88.99/45")
+		).check(portSecurityPage.successfulMessageShouldBePresented(uiInstance.getDriver()));
+
+	}
+	
 }

@@ -1,5 +1,7 @@
 package com.internap.MiroC_UI.Pages;
 
+import java.util.concurrent.TimeUnit;
+
 import junit.framework.Assert;
 
 import org.openqa.selenium.By;
@@ -8,6 +10,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import com.internap.MiroC_UI.Common.MyProjPage;
+import com.internap.MiroC_UI.Common.PageUtils;
 import com.ts.commons.Validator;
 
 
@@ -110,7 +113,9 @@ public class EditUserPage extends MyProjPage {
 	}
 	
 	//this method allows edit an user
-	public EditUserPage editUser (String firstName, String lastName, boolean admin){
+	public EditUserPage editUser (WebDriver driver, String firstName, String lastName, boolean admin){
+		PageUtils.refreshPage(driver);
+		driver.manage().timeouts().implicitlyWait(7, TimeUnit.SECONDS);
 		this.editUserButton.click();
 		
 		this.firstNameField.clear();
@@ -137,7 +142,9 @@ public class EditUserPage extends MyProjPage {
 		return this;
 	}
 	
-	public EditUserPage manualResetPassword(String newPass, String confirmPass){
+	public EditUserPage manualResetPassword(WebDriver driver ,String newPass, String confirmPass){
+		PageUtils.refreshPage(driver);
+		driver.manage().timeouts().implicitlyWait(7, TimeUnit.SECONDS);
 		this.resetPasswordButton.click();
 		this.userResetButton.click();
 		this.newPassword.sendKeys(newPass);
@@ -145,6 +152,23 @@ public class EditUserPage extends MyProjPage {
 		this.manualUpdateResetButton.click();
 		return this;
 	}
+	
+	
+	//miroUser
+	
+	//this method allows create a miroUser
+		public EditUserPage addMiroUser (WebDriver driver, String user, String firstName, String lastName, boolean admin){
+			PageUtils.refreshPage(driver);
+			driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+			this.addUserButton.click();
+			clearFields();
+			this.userNameField.sendKeys(user);
+			this.firstNameField.sendKeys(firstName);
+			this.lastNameField.sendKeys(lastName);
+			this.adminCheck.equals(admin);
+			this.saveUserButton.click();
+			return this;
+		}
 	
 	
 	//this method validates that the operation was successful

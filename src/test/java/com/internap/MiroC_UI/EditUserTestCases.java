@@ -63,7 +63,7 @@ public class EditUserTestCases extends MyProjTestCaseUtils {
 	public void manualResetUserPassword(){
 		
 		using(editUserPage
-				.manualResetPassword("123456", "123456")
+				.manualResetPassword(uiInstance.getDriver(), "123456", "123456")
 		).check(editUserPage.assignmentListMustBePresent(uiInstance.getDriver()));
 	}
 	
@@ -75,7 +75,7 @@ public class EditUserTestCases extends MyProjTestCaseUtils {
 	public void editUser() {
 
 		using(editUserPage
-				.editUser("testNew", "testNew", false)
+				.editUser(uiInstance.getDriver(), "testNew", "testNew", false)
 		).check(editUserPage.assignmentListMustBePresent(uiInstance.getDriver()));
 
 	}	
@@ -91,5 +91,19 @@ public class EditUserTestCases extends MyProjTestCaseUtils {
 		).check(editUserPage.assignmentListMustBePresent(uiInstance.getDriver()));
 
 	}	
+	
+	
+	/**
+	 * This test case is the equivalent to the Testlink id: MIRO'
+    */
+	@Test(groups = { "Positive", "addMiroUserUser" },  dependsOnMethods = "deleteUser")
+	public void addMiroUserUser() {
+
+		using(editUserPage
+				.addMiroUser(uiInstance.getDriver(), "TestMiroUser", "miroUser", "miroUser", false)
+		).check(editUserPage.assignmentListMustBePresent(uiInstance.getDriver()));
+
+	}
+	
 	
 }

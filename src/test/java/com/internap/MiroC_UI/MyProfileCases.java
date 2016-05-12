@@ -12,6 +12,7 @@ import com.internap.MiroC_UI.Home.Home;
 import com.internap.MiroC_UI.Home.LoginPage;
 import com.internap.MiroC_UI.Pages.MyProfilePage;
 import com.internap.MiroC_UI.Common.MyProjTestCaseUtils;
+import com.internap.MiroC_UI.Common.PageUtils;
 
 public class MyProfileCases extends MyProjTestCaseUtils{
 	
@@ -20,6 +21,7 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 			uiInstance.getDriver(), MyProfilePage.class);
 	ConfigurationPage configurationPage;
 	Home home;
+	
 	
 	String firstname = "testFirstName";
 	String lastname = "testLastName";  
@@ -40,18 +42,80 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 		home = PageFactory.initElements(uiInstance.getDriver(), Home.class);
 	}
 	
+	
+	 ////////////////////////////////////////////////////////-----ACCOUNT INFO-------/////////////////////////////////////////////////////////////////////////
+	
 	/**
-	 * This test case is the equivalent to the Testlink id: MIRO'
+	 * This test case is the equivalent to the Testlink id:
+	 * MBOX-275- Change User Admin Info && 
+	 * MBOX-335- New user info is shown after some changes were performed
 	 */ 
-	@Test(groups = { "Positive" },priority = 0) 
-	public void editMyProfile() { 
+	@Test(groups = { "Positive", "checkHeaderInfo" },priority = 0) 
+	public void checkHeaderInfo() { 
 		using(myProfilePage = home  
 				.goMyProfilePage(uiInstance.getDriver()) 
 				.editMyProfile(firstname,lastname,email))
-		.check(myProfilePage.userIsEdited(uiInstance.getDriver(), firstname, lastname, email))
+				
+		.check(myProfilePage.userIsEdited(uiInstance.getDriver(), firstname, lastname, email),
+				myProfilePage.verifyUserInfoOnHeader(uiInstance.getDriver(), firstname, lastname))
 		
-		.andUsing(myProfilePage.editMyProfile(firstname1, lastname2, "")) 
-		.check(myProfilePage.userIsEdited(uiInstance.getDriver(), firstname1, lastname2, ""));
+		.andUsing(loginPage = home  
+				.goLogOut(uiInstance.getDriver()).login(Common.adminUserName, Common.passWord))
+				.check(myProfilePage.verifyUserInfoOnHeader(uiInstance.getDriver(), firstname, lastname));
+		
+		//.andUsing(myProfilePage.editMyProfile("admin", "user", ""))
+		//.check(myProfilePage.userIsEdited(uiInstance.getDriver(), "admin", "user", ""));
+				
+	} 
+	
+	/**
+	 * This test case is the equivalent to the Testlink id: MBOX-590- Account info validates empty values
+	 */ 
+	@Test(groups = { "Positive", "verifyEmptyValues"},dependsOnMethods = "checkHeaderInfo") 
+	public void verifyEmptyValues() { 
+		using(myProfilePage 
+				.editMyProfile("","",""))
+		.check(myProfilePage.validateEmptyValues(uiInstance.getDriver()));
+
+	} 
+	
+	/**
+	 * This test case is the equivalent to the Testlink id: MBOX-588- User cannot change the username
+	 */
+	@Test(groups = { "Positive", "checkUsernameFieldIsDisabled" },dependsOnMethods = "verifyEmptyValues") 
+	public void checkUsernameFieldIsDisabled() { 
+		using(myProfilePage = home  
+				.goMyProfilePage(uiInstance.getDriver()))
+		.check(myProfilePage.usernameFieldIsDisabled(uiInstance.getDriver()));		
+	} 
+	
+	
+	
+	
+	 ////////////////////////////////////////////////////////-----CHANGE PASSWORD-------/////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * This test case is the equivalent to the Testlink id: 
+	 * MBOX-334- User can login with the new password after it was changed
+	 * MBOX-272- Change user password
+	 */ 
+	@Test(groups = { "Positive", "verifyChangePassword" },dependsOnMethods = "checkUsernameFieldIsDisabled") 
+	public void verifyChangePassword() { 
+		using(myProfilePage = home  
+				.goMyProfilePage(uiInstance.getDriver())
+				.goChangePassword(uiInstance.getDriver())
+				.changePassword(Common.passWord, Common.newPassWord, Common.newPassWord))
+		.check(myProfilePage.passwordIsChanged(uiInstance.getDriver()))
+		.andUsing(loginPage = home  
+				.goLogOut(uiInstance.getDriver())
+				.login(Common.adminUserName, Common.newPassWord))
+				.check(loginPage.successfulMessageMustBePresent())
+				
+		.andUsing(myProfilePage = home  
+				.goMyProfilePage(uiInstance.getDriver())
+				.goChangePassword(uiInstance.getDriver())
+				.changePassword(Common.newPassWord, Common.passWord, Common.passWord))
+		.check(myProfilePage.passwordIsChanged(uiInstance.getDriver()));
 		
 	} 
 

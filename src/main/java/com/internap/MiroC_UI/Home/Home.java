@@ -5,6 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import com.internap.MiroC_UI.Common.InternapUI;
 import com.internap.MiroC_UI.Common.MyProjPage;
 import com.internap.MiroC_UI.Pages.MyProfilePage;
 
@@ -40,6 +41,7 @@ public class Home extends MyProjPage {
 	@FindBy(xpath =  "//a[contains(.,'My Profile')]")
 	private WebElement myprofile;
 	
+	
 	@Override
 	public Home and() {
 		return this;
@@ -48,6 +50,12 @@ public class Home extends MyProjPage {
 	@Override
 	public Home then() {
 		return this;
+	}
+	
+	public LoginPage goLogOut (WebDriver driver){
+		
+		this.logout.click();
+		return PageFactory.initElements(driver, LoginPage.class);
 	}
 			
 	public ConfigurationPage goConfigurationTab (WebDriver driver){
