@@ -183,7 +183,7 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 				.goChangeAvatar(uiInstance.getDriver())
 				.uploadImage(uiInstance.getDriver(), "src/main/resources/newAvatar.jpg")) 				
 		.check(myProfilePage.avatarIsUploaded(uiInstance.getDriver()))
-		
+
 		.andUsing(myProfilePage
 				.uploadImage(uiInstance.getDriver(), "src/main/resources/originalAvatar.jpg")) 
 		.check(myProfilePage.avatarIsUploaded(uiInstance.getDriver()));
