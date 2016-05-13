@@ -8,6 +8,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import com.internap.MiroC_UI.Common.MyProjPage;
+import com.internap.MiroC_UI.Pages.AuthenticationPage;
 import com.internap.MiroC_UI.Pages.EditUserPage;
 import com.internap.MiroC_UI.Pages.OptimizationKnobPage;
 import com.internap.MiroC_UI.Pages.PortSecurityPage;
@@ -64,6 +65,11 @@ public class ConfigurationPage extends MyProjPage {
 	public PortSecurityPage goPortSecurity (WebDriver driver){
 		this.portSecurityTab.click();
 		return PageFactory.initElements(driver, PortSecurityPage.class);
+	}
+	
+	public AuthenticationPage goAuthentication (WebDriver driver){
+		this.authenticationTab.click();
+		return PageFactory.initElements(driver, AuthenticationPage.class);
 	}
 	
 	//edit user
