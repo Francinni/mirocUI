@@ -38,12 +38,83 @@ public class EditUserTestCases extends MyProjTestCaseUtils {
 	 */
 	@Test(groups = { "Positive",  "addUser" },priority = 0)
 	public void addUser() {
-
 		using(editUserPage = home
 				.goConfigurationTab(uiInstance.getDriver())
 				.goEditUser(uiInstance.getDriver())
 				.addUser("testAuto", "test", "test", true))
 				.check(editUserPage.assignmentListMustBePresent(uiInstance.getDriver()));
+	}
+	
+	
+	/**
+	 * This test case is the equivalent to the Testlink id: MIRO'
+    */
+	@Test(groups = { "Positive", "resetUser" },  dependsOnMethods = "addUser")
+	public void resetUserPassword(){		
+		using(editUserPage
+				.resetPassword()
+		).check(editUserPage.assignmentListMustBePresent(uiInstance.getDriver()));
+	}
+	
+	
+	@Test(groups = { "Positive", "resetUser" },  dependsOnMethods = "resetUserPassword")
+	public void manualResetUserPassword(){		
+		using(editUserPage
+				.manualResetPassword(uiInstance.getDriver(), "123456", "123456")
+		).check(editUserPage.assignmentListMustBePresent(uiInstance.getDriver()));
+	}
+	
+	
+	/**
+	 * This test case is the equivalent to the Testlink id: MIRO'
+    */
+	@Test(groups = { "Positive", "editUser" },  dependsOnMethods = "manualResetUserPassword")
+	public void editUser() {
+		using(editUserPage
+				.editUser(uiInstance.getDriver(), "testNew", "testNew", false)
+		).check(editUserPage.assignmentListMustBePresent(uiInstance.getDriver()));
+
+	}	
+	
+	/**
+	 * This test case is the equivalent to the Testlink id: MIRO'
+    */
+	@Test(groups = { "Positive", "deleteUser" },  dependsOnMethods = "lessChangePassword")
+	public void deleteUser() {
+		using(editUserPage
+				.deleteUser()
+		).check(editUserPage.assignmentListMustBePresent(uiInstance.getDriver()));
+
+	}	
+	
+	
+	/**
+	 * This test case is the equivalent to the Testlink id: MIRO'
+    */
+	@Test(groups = { "Positive", "addMiroUserUser" },  dependsOnMethods = "deleteUser")
+	public void addMiroUser() {
+		using(editUserPage
+				.addMiroUser(uiInstance.getDriver(), "TestMiroUser", "miroUser", "miroUser", false)
+		).check(editUserPage.assignmentListMustBePresent(uiInstance.getDriver()));
+
+	}	
+		
+	//negatives cases
+	
+	//this method validates that the pass must have at less 4 characters
+	@Test(groups = {"Negative", "lessChangePassword"}, dependsOnMethods = "editUser")
+	public void lessChangePassword() {		
+		using(editUserPage
+				.lessChangePassword(uiInstance.getDriver(), "123", "123")
+		).check(editUserPage.validationNewPass(uiInstance.getDriver()));
+	}
+	
+	//this method validates that the username must have at less 4 characters
+	@Test(groups = {"Negative", "shortUserName"}, dependsOnMethods = "addMiroUser")
+	public void shortUserName() {		
+		using(editUserPage
+				.shortUserName("tes", "testUser", "testUser", false)
+		).check(editUserPage.validationuserName(uiInstance.getDriver()));
 	}
 	
 }

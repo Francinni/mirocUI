@@ -26,6 +26,9 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 	String firstname = "testFirstName";
 	String lastname = "testLastName";  
 	String email = "test@testing.com";
+	
+	String firstname1 = "admin";
+	String lastname2 = "user";
 
 
 	public MyProfileCases(String browserType) {
@@ -101,7 +104,6 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 				.goChangePassword(uiInstance.getDriver())
 				.changePassword(uiInstance.getDriver(),Common.passWord, Common.newPassWord, Common.newPassWord))
 		.check(myProfilePage.passwordIsChanged(uiInstance.getDriver()))
-		
 		.andUsing(loginPage = home  
 				.goLogOut(uiInstance.getDriver())
 				.login(Common.adminUserName, Common.newPassWord))
@@ -139,7 +141,7 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 				.goChangePassword(uiInstance.getDriver())
 				.clearPassword(uiInstance.getDriver()) 
 				.changePassword(uiInstance.getDriver(),Common.passWord, Common.passWord, Common.passWord))
-		.check(myProfilePage.oldAndNewPasswordShouldNotMatch(uiInstance.getDriver()));				
+		.check(myProfilePage.oldAndNewPasswordShouldNotMatch(uiInstance.getDriver()));		
 		
 	} 
 	

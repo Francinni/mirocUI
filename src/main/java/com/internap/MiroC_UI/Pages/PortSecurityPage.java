@@ -44,18 +44,6 @@ public class PortSecurityPage extends MyProjPage {
 	@FindBy(xpath = ".//div[@class='actions']/a[contains(.,'Save')]")
 	private WebElement saveButton;
 
-	@Override
-	public MyProjPage and() {
-		// TODO Auto-generated method stub
-		return this;
-	}
-
-	@Override
-	public MyProjPage then() {
-		// TODO Auto-generated method stub
-		return this;
-	}
-
 	// Method to add a port security
 	public PortSecurityPage addPortSecurity(WebDriver driver,
 			String portSecurity) {
