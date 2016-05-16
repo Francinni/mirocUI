@@ -97,10 +97,9 @@ public class ConfigurationPage extends MyProjPage {
 	
 	//Save /Export / Import
 		public SaveExportImportPage goSaveExportImport (WebDriver driver){
-			//this.userTab.click();
-			WebElement element = driver.findElement(By.xpath("//a[contains(.,'Save')]"));
+
 			  JavascriptExecutor executor = (JavascriptExecutor)driver;
-			  executor.executeScript("arguments[0].click();", element);
+			  executor.executeScript("arguments[0].click();", this.saveImportExportTab);
 			
 			return PageFactory.initElements(driver, SaveExportImportPage.class);
 		}

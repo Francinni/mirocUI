@@ -242,7 +242,7 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 	/**
 	 * This test case is the equivalent to the Testlink id: MBOX-584- Remove button deletes the selected image
 	 */ 
-	@Test(groups = { "Positive", "cancelUpdateImage"} ,dependsOnMethods = "verifyWronFormatFiles") 
+	@Test(groups = { "Positive", "cancelUpdateImage"} ,dependsOnMethods = "verifyWrongFormatFiles") 
 	public void cancelUpdateImage() { 
 		PageUtils.refreshPage(uiInstance.getDriver());
 		using(myProfilePage 
