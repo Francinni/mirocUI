@@ -1,8 +1,11 @@
 package com.internap.MiroC_UI.Pages;
 
+import java.util.concurrent.TimeUnit;
+
 import junit.framework.Assert;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -16,10 +19,10 @@ public class AuthenticationPage extends MyProjPage {
 
 	// General
 
-	@FindBy(xpath = ".//span[Contains(.,'ON')]")
+	@FindBy(xpath = ".//span[@class='bootstrap-switch-handle-off bootstrap-switch-default'][contains(.,'ON')]")
 	private WebElement onAuthentication;
 
-	@FindBy(xpath = ".//span[@class='bootstrap-switch-handle-off bootstrap-switch-default'][Contains(.,'OFF')]")
+	@FindBy(xpath = ".//span[@class='bootstrap-switch-handle-off bootstrap-switch-default'][contains(.,'OFF')]")
 	private WebElement offAuthentication;
 
 	@FindBy(xpath = ".//*[@id='Radius']")
@@ -30,6 +33,9 @@ public class AuthenticationPage extends MyProjPage {
 
 	@FindBy(xpath = ".//*[@id='ldap']")
 	private WebElement ldapTab;
+
+	@FindBy(xpath = "html/body/div[4]/div[2]/div/div[2]/div/div/div[1]/div[2]/p")
+	private WebElement message;
 
 	// Radius
 
@@ -45,7 +51,7 @@ public class AuthenticationPage extends MyProjPage {
 	@FindBy(xpath = ".//*[@id='tab_15_1']/div/form/div[2]/button[Contains(.,'Cancel')]")
 	private WebElement radiusCancelButton;
 
-	//.//*[@id='tab_15_1']/div/form/div[2]/button[Contains(.,'Save')]
+	// .//*[@id='tab_15_1']/div/form/div[2]/button[Contains(.,'Save')]
 	@FindBy(xpath = ".//*[@id='tab_15_1']/div/form/div[2]/button[2]")
 	private WebElement radiusSveButton;
 
@@ -60,7 +66,7 @@ public class AuthenticationPage extends MyProjPage {
 	@FindBy(xpath = ".//*[@id='tab_15_2']/div/form/div[2]/button[Contains(.,'Cancel')]")
 	private WebElement tacacsCancelButton;
 
-	//.//*[@id='tab_15_2']/div/form/div[2]/button[Contains(.,'Save')]
+	// .//*[@id='tab_15_2']/div/form/div[2]/button[Contains(.,'Save')]
 	@FindBy(xpath = ".//*[@id='tab_15_2']/div/form/div[2]/button[2]")
 	private WebElement tacacsSveButton;
 
@@ -83,7 +89,7 @@ public class AuthenticationPage extends MyProjPage {
 
 	@FindBy(xpath = ".//*[@id='tab_15_3']/div/form/div[2]/button[Contains(.,'Cancel')]")
 	private WebElement ldapCancelButton;
-//.//*[@id='tab_15_3']/div/form/div[2]/button[Contains(.,'Save')]
+	// .//*[@id='tab_15_3']/div/form/div[2]/button[Contains(.,'Save')]
 	@FindBy(xpath = ".//*[@id='tab_15_3']/div/form/div[2]/button[2]")
 	private WebElement ldapSveButton;
 
@@ -95,7 +101,7 @@ public class AuthenticationPage extends MyProjPage {
 	@FindBy(xpath = ".//*[@id='tab_15_3']/div/form/div[1]/div[7]/div[1]/input[@name='val']")
 	private WebElement ldapValTextfield;
 
-	@FindBy(xpath = ".//*[@id='tab_15_3']/div/form/div[1]/div[7]/div[2]/button[Contains(.,'Add')]")
+	@FindBy(xpath = ".//*[@id='tab_15_3']/div/form/div[1]/div[7]/div[2]/button[contains(.,'Add')]")
 	private WebElement ldapAddButton;
 
 	// Method to enable the external authentication
@@ -113,13 +119,13 @@ public class AuthenticationPage extends MyProjPage {
 	}
 
 	// Method to know if authentication is enabled
-	public AuthenticationPage clear() {
+	public AuthenticationPage clearRadius() {
 		this.radiusServerIPTexfield.clear();
 		this.radiusPasswordTextfield.clear();
 		this.radiusTimeOutTextfield.clear();
 		return this;
 	}
-	
+
 	// Method to know if authentication is enabled
 	public AuthenticationPage clearTacacs() {
 		this.tacacsServerTextfield.clear();
@@ -127,25 +133,60 @@ public class AuthenticationPage extends MyProjPage {
 		return this;
 	}
 
-	// Method to save RADIUS authentication
-	public AuthenticationPage addRaius(WebDriver driver, String server,
-			String pass, String timeout) {
-		boolean value = radiusServerIPTexfield.isEnabled();
-		System.out.print("atributo" + value);
+	// Method to know if authentication is enabled
+	public AuthenticationPage clearLdap() {
+		this.ldapBaseTextfield.clear();
+		this.ldapURITextfield.clear();
+		this.ldapVersionTextfield.clear();
+		this.ldapRootBinddnTextfield.clear();
+		this.ldapPasswordTextfield.clear();
+		return this;
+	}
+	
+	// Method to know if authentication is enabled
+		public AuthenticationPage clearLdapExtraParameter() {
+			this.ldapKeyTextfield.clear();
+			this.ldapValTextfield.clear();
+			return this;
+		}
 
-		if (value == true) {
+	// Method to know if authentication is enabled
+	public AuthenticationPage addExtraLdapParameter(String key, String value) {
+		clearLdapExtraParameter();
+		this.ldapKeyTextfield.sendKeys(key);
+		this.ldapValTextfield.sendKeys(value);
+		this.ldapAddButton.click();
+		return this;
+	}
+	
+	// Method to know if authentication is enabled
+	public AuthenticationPage deleteExtraLdapParameter(WebDriver driver, String value) {
+		WebElement element=driver.findElement(By.xpath(".//*[@id='tab_15_3']/div/form/div[1]/div[8]/table/tbody/tr/td[2][contains(.,'"+value+"')]/following-sibling::td/a/i"));
+		element.click();
+		return this;
+	}
+
+	// Method to save RADIUS authentication
+	public AuthenticationPage addRadius(WebDriver driver, String server,
+			String pass, String timeout) {
+		
+		String value = radiusServerIPTexfield.getText();
+
+		if (value.equals("External authentication is disabled")) {
+			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 			WaitTool.waitForElementPresentAndVisible(driver, radiusTab);
 			this.radiusTab.click();
-			clear();
+			clearRadius();
 			this.radiusServerIPTexfield.sendKeys(server);
 			this.radiusPasswordTextfield.sendKeys(pass);
 			this.radiusTimeOutTextfield.sendKeys(timeout);
 			this.radiusSveButton.click();
 		} else {
 			this.offAuthentication.click();
+			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 			WaitTool.waitForElementPresentAndVisible(driver, radiusTab);
 			this.radiusTab.click();
-			clear();
+			clearRadius();
 			this.radiusServerIPTexfield.sendKeys(server);
 			this.radiusPasswordTextfield.sendKeys(pass);
 			this.radiusTimeOutTextfield.sendKeys(timeout);
@@ -157,10 +198,12 @@ public class AuthenticationPage extends MyProjPage {
 	// Method to save TACACS authentication
 	public AuthenticationPage addTACACS(WebDriver driver, String server,
 			String pass) {
-		boolean value = radiusServerIPTexfield.isEnabled();
+		String value = radiusServerIPTexfield.getText();
 
-		if (value = true) {
+		if (value.equals("External authentication is disabled")) {
+			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 			WaitTool.waitForElementPresentAndVisible(driver, tacacsTab);
+			this.tacacsTab.click();
 			this.tacacsTab.click();
 			clearTacacs();
 			this.tacacsServerTextfield.sendKeys(server);
@@ -168,6 +211,8 @@ public class AuthenticationPage extends MyProjPage {
 			this.tacacsSveButton.click();
 		} else {
 			this.offAuthentication.click();
+			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+			WaitTool.waitForElementPresentAndVisible(driver, tacacsTab);
 			this.tacacsTab.click();
 			clearTacacs();
 			this.tacacsServerTextfield.sendKeys(server);
@@ -180,11 +225,14 @@ public class AuthenticationPage extends MyProjPage {
 	// Method to save LDAP authentication
 	public AuthenticationPage addLDAP(WebDriver driver, String base,
 			String uri, String version, String rootbinddn, String pass) {
-		boolean value = radiusServerIPTexfield.isEnabled();
+		String value = radiusServerIPTexfield.getText();
 
-		if (value = true) {
+		if (value.equals("External authentication is disabled")) {
+			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 			WaitTool.waitForElementPresentAndVisible(driver, ldapTab);
 			this.ldapTab.click();
+			this.ldapTab.click();
+			clearLdap();
 			this.ldapBaseTextfield.sendKeys(base);
 			this.ldapURITextfield.sendKeys(uri);
 			this.ldapVersionTextfield.sendKeys(version);
@@ -192,9 +240,13 @@ public class AuthenticationPage extends MyProjPage {
 			this.ldapPasswordTextfield.sendKeys(pass);
 			this.ldapSveButton.click();
 		} else {
-			this.offAuthentication.click();
+			JavascriptExecutor executor = (JavascriptExecutor) driver;
+			executor.executeScript("arguments[0].click();", offAuthentication);
+		//	this.offAuthentication.click();
+			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 			WaitTool.waitForElementPresentAndVisible(driver, ldapTab);
 			this.ldapTab.click();
+			clearLdap();
 			this.ldapBaseTextfield.sendKeys(base);
 			this.ldapURITextfield.sendKeys(uri);
 			this.ldapVersionTextfield.sendKeys(version);
@@ -202,6 +254,31 @@ public class AuthenticationPage extends MyProjPage {
 			this.ldapPasswordTextfield.sendKeys(pass);
 			this.ldapSveButton.click();
 		}
+		return this;
+	}
+
+	public boolean isPassword() {
+		String isPassword = radiusPasswordTextfield.getAttribute("type");
+		boolean value = false;
+
+		if (isPassword.equals("password")) {
+			value = true;
+		}
+		return value;
+	}
+
+	public AuthenticationPage goRadiusTab() {
+		this.radiusTab.click();
+		return this;
+	}
+
+	public AuthenticationPage goTacacsTab() {
+		this.tacacsTab.click();
+		return this;
+	}
+
+	public AuthenticationPage goLdapTab() {
+		this.ldapTab.click();
 		return this;
 	}
 
@@ -213,12 +290,76 @@ public class AuthenticationPage extends MyProjPage {
 			public void Validate() {
 
 				boolean thereIsAnSuccessfulMessage = PageUtils
-						.isElementPresent(
-								driver,
-								//.//p[Contains(.,'Authentication settings saved successfully.')]
+						.isElementPresent(driver,
+						// .//p[Contains(.,'Authentication settings
+						// saved successfully.')]
 								By.xpath("html/body/div[4]/div[2]/div/div[2]/div/div/div[1]/div[2]/p"));
 				Assert.assertTrue(thereIsAnSuccessfulMessage);
 			}
 		};
 	}
+
+	public Validator isPasswordValidator(final WebDriver driver) {
+		return new Validator() {
+			@Override
+			public void Validate() {
+				boolean isPassword = isPassword();
+				Assert.assertTrue(isPassword);
+			}
+		};
+	}
+
+	// Validator for Port security (Empty or invalid values)
+	public Validator emptyValuesAuthentication(final WebDriver driver,
+			final String sendValue) {
+		return new Validator() {
+
+			@Override
+			public void Validate() {
+				String xpath = ".//*[@id='tab_15_" + sendValue
+						+ "']/div/form/div[1]/div/div/ng-messages/p";
+				WebElement element = driver.findElement(By.xpath(xpath));
+
+				boolean thereIsAnSuccessfulMessage = PageUtils
+						.isElementPresent(driver, element);
+				Assert.assertTrue(thereIsAnSuccessfulMessage);
+			}
+		};
+	}
+	
+	// Validator for Port security (Empty or invalid values)
+		public Validator extraLdapParameterIsPresented(final WebDriver driver,
+				final String key) {
+			return new Validator() {
+
+				@Override
+				public void Validate() {
+					String xpath = ".//*[@id='tab_15_3']/div/form/div[1]/div[8]/table/tbody/tr/td[contains(.,'" + key
+							+ "')]";
+					WebElement element = driver.findElement(By.xpath(xpath));
+
+					boolean thereIsAnSuccessfulMessage = PageUtils
+							.isElementPresent(driver, element);
+					Assert.assertTrue(thereIsAnSuccessfulMessage);
+				}
+			};
+		}
+		
+		// Validator for Port security (Empty or invalid values)
+				public Validator extraLdapParameterIsNotPresented(final WebDriver driver,
+						final String key) {
+					return new Validator() {
+
+						@Override
+						public void Validate() {
+							String xpath = ".//*[@id='tab_15_3']/div/form/div[1]/div[8]/table/tbody/tr/td[1][contains(.,'" + key
+									+ "')]";
+
+							boolean notPresent = PageUtils
+									.isElementPresent(driver, By.xpath(xpath));
+							System.out.print("PRESENTE>>>>>" + notPresent);
+							Assert.assertFalse(notPresent);
+						}
+					};
+				}
 }

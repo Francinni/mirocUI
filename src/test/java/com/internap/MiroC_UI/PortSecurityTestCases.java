@@ -60,7 +60,7 @@ public class PortSecurityTestCases extends MyProjTestCaseUtils {
 	/**
 	 * This test case is the equivalent to the Testlink: MBOX-369:System validates if the user enter an invalid trusted network or blocked port
     */
-	@Test(groups = { "Negative", "cannotAddExistentPortSecurity" }, dependsOnMethods = "cannotAddExistentPortSecurity")
+	@Test(groups = { "Negative", "cannotAddEmptyOrInvalidValuePortSecurity" }, dependsOnMethods = "cannotAddExistentPortSecurity")
 	public void cannotAddEmptyOrInvalidValuePortSecurity() {
 
 		using(portSecurityPage
