@@ -50,8 +50,8 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 	 * MBOX-275- Change User Admin Info && 
 	 * MBOX-335- New user info is shown after some changes were performed
 	 */ 
-	@Test(groups = { "Positive", "editAccountInfo" },priority = 0) 
-	public void editAccountInfo() { 
+	@Test(groups = { "Positive", "editAdminAccountInfo" },priority = 0) 
+	public void editAdminAccountInfo() { 
 		using(myProfilePage = home  
 				.goMyProfilePage(uiInstance.getDriver()) 
 				.editMyProfile(firstname,lastname,email))
@@ -71,7 +71,7 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 	/**
 	 * This test case is the equivalent to the Testlink id: MBOX-590- Account info validates empty values
 	 */ 
-	@Test(groups = { "Negative", "verifyEmptyValuesOnAccountInfo"},dependsOnMethods = "editAccountInfo") 
+	@Test(groups = { "Negative", "verifyEmptyValuesOnAccountInfo"},dependsOnMethods = "editAdminAccountInfo") 
 	public void verifyEmptyValuesOnAccountInfo() { 
 		using(myProfilePage 
 				.editMyProfile("","",""))
@@ -89,6 +89,40 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 		.check(myProfilePage.usernameFieldIsDisabled(uiInstance.getDriver()));		
 	} 
 		
+	/**
+	 * This test case is the equivalent to the Testlink id:
+	 * MBOX-271- Change User Info  && 
+	 * MBOX-335- New user info is shown after some changes were performed
+	 */ 
+	@Test(groups = { "Positive", "editUserAccountInfo" },dependsOnMethods = "checkUsernameFieldIsDisabled")
+	public void editUserAccountInfo() { 
+		
+		using(loginPage = home  
+				.goLogOut(uiInstance.getDriver())
+				.login(Common.userUserName, Common.userPassWord))
+				.check(loginPage.successfulMessageMustBePresent());
+		
+		andUsing(myProfilePage = home  
+				.goMyProfilePage(uiInstance.getDriver()) 
+				.editMyProfile(firstname,lastname,email))
+				
+		.check(myProfilePage.userIsEdited(uiInstance.getDriver(), firstname, lastname, email),
+				myProfilePage.verifyUserInfoOnHeader(uiInstance.getDriver(), firstname, lastname))
+		
+		.andUsing(loginPage = home  
+				.goLogOut(uiInstance.getDriver()).login(Common.userUserName, Common.userPassWord))
+				.check(myProfilePage.verifyUserInfoOnHeader(uiInstance.getDriver(), firstname, lastname))
+		
+		.andUsing(myProfilePage.editMyProfile("User", "User", ""))
+		.check(myProfilePage.userIsEdited(uiInstance.getDriver(), "User", "User", ""))
+		
+		.andUsing(loginPage = home  
+				.goLogOut(uiInstance.getDriver()).login(Common.adminUserName, Common.passWord))
+				.check();
+				
+	} 
+	
+	
 	
 	 ////////////////////////////////////////////////////////-----CHANGE PASSWORD-------/////////////////////////////////////////////////////////////////////////
 
@@ -97,7 +131,7 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 	 * MBOX-334- User can login with the new password after it was changed
 	 * MBOX-272- Change user password
 	 */ 
-	@Test(groups = { "Positive", "verifyChangePassword" },dependsOnMethods = "checkUsernameFieldIsDisabled") 
+	@Test(groups = { "Positive", "verifyChangePassword" },dependsOnMethods = "editUserAccountInfo") 
 	public void verifyChangePassword() { 
 		using(myProfilePage = home  
 				.goMyProfilePage(uiInstance.getDriver())
@@ -185,7 +219,7 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 				.goChangeAvatar(uiInstance.getDriver())
 				.uploadImage(uiInstance.getDriver(), "src/main/resources/newAvatar.jpg")) 				
 		.check(myProfilePage.avatarIsUploaded(uiInstance.getDriver()))
-		
+
 		.andUsing(myProfilePage
 				.uploadImage(uiInstance.getDriver(), "src/main/resources/originalAvatar.jpg")) 
 		.check(myProfilePage.avatarIsUploaded(uiInstance.getDriver()));
@@ -193,15 +227,30 @@ public class MyProfileCases extends MyProjTestCaseUtils{
 	} 
 	
 	/**
+	 * This test case is the equivalent to the Testlink id: MBOX-587- User cannot upload an invalid file for the avatar
+	 */ 
+	@Test(groups = { "Negative", "verifyWrongFormatFiles"} ,dependsOnMethods = "updateImage") 
+	public void verifyWrongFormatFiles() { 
+		PageUtils.refreshPage(uiInstance.getDriver());
+		using(myProfilePage
+				.goChangeAvatar(uiInstance.getDriver())
+				.uploadImage(uiInstance.getDriver(), "src/main/resources/wrongFormat.txt")) 				
+		.check(myProfilePage.wrongFormatValidation(uiInstance.getDriver()));
+
+	} 
+	
+	/**
 	 * This test case is the equivalent to the Testlink id: MBOX-584- Remove button deletes the selected image
 	 */ 
-	@Test(groups = { "Positive", "cancelUpdateImage"} ,dependsOnMethods = "updateImage") 
+	@Test(groups = { "Positive", "cancelUpdateImage"} ,dependsOnMethods = "verifyWrongFormatFiles") 
 	public void cancelUpdateImage() { 
-		using(myProfilePage = home
-				.goMyProfilePage(uiInstance.getDriver())
+		PageUtils.refreshPage(uiInstance.getDriver());
+		using(myProfilePage 
 				.goChangeAvatar(uiInstance.getDriver())
 				.cancelUploadImage(uiInstance.getDriver())) 				
 		.check(myProfilePage.avatarUploadIsCancelled(uiInstance.getDriver()));
 
 	} 
+	
+	
 } 

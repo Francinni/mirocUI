@@ -246,8 +246,19 @@ public class MyProfilePage extends MyProjPage {
 	
 	public MyProfilePage uploadImage (WebDriver driver, String imgPath){
 		String f = new File(imgPath).getAbsolutePath();
-		this.selectImage.sendKeys(f);
-		this.uploadButton.click();
+		try {
+			Thread.sleep(1500);
+			this.selectImage.sendKeys(f);
+		} catch (Exception e) {
+			
+		}
+		
+		try {
+			Thread.sleep(1500);
+			this.uploadButton.click();
+		} catch (Exception e) {
+			
+		}		
 		return this;   
 	}
 	
@@ -264,7 +275,13 @@ public class MyProfilePage extends MyProjPage {
 	public MyProfilePage cancelUploadImage (WebDriver driver){
 		String f = new File("src/main/resources/newAvatar.jpg").getAbsolutePath();
 		this.selectImage.sendKeys(f);
-		this.removeButton.click();
+		try {
+			Thread.sleep(1500);
+			this.removeButton.click();
+		} catch (Exception e) {
+			
+		}
+		
 		return this;   
 	}
 	
@@ -279,4 +296,18 @@ public class MyProfilePage extends MyProjPage {
 		};
 	}
 	
+	public Validator wrongFormatValidation(final WebDriver driver) {
+		return new Validator() {
+			@Override
+			public void Validate() {	
+				boolean wrongFormatMessage = PageUtils.isElementPresent(driver, By.xpath("//p[text()='Please upload your profile image in format: jpg, png, jpeg, bmp or gif']"));
+				Assert.assertTrue(wrongFormatMessage,"Wrong Format Message is not displayed");				
+			}
+		};
+	}
+	
 }
+
+    Status API Training Shop Blog About 
+
+    © 2016 GitHub, Inc. Terms Privac

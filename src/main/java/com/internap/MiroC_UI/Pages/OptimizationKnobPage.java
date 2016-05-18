@@ -138,13 +138,13 @@ public class OptimizationKnobPage extends MyProjPage {
 				@Override
 				public void Validate() {
 					boolean costMessage = PageUtils.isElementPresent(driver, By.xpath("html/body/div[4]/div[2]/div/div[2]/div/div/div[3]/div/div/div[2]/form/div/div[1]/div/div[2]/div/p[contains(.,'The value is below the minimum')]"));
-					Assert.assertTrue(costMessage,"Password validation messages are not displayed");
+					Assert.assertTrue("Password validation messages are not displayed",costMessage);
 					boolean latencyMessage = PageUtils.isElementPresent(driver, By.xpath("html/body/div[4]/div[2]/div/div[2]/div/div/div[3]/div/div/div[2]/form/div/div[2]/div/div[2]/div/p[contains(.,'The value is below the minimum')]"));
-					Assert.assertTrue(latencyMessage,"Password validation messages are not displayed");
+					Assert.assertTrue("Password validation messages are not displayed",latencyMessage);
 					boolean lossMessage = PageUtils.isElementPresent(driver, By.xpath("html/body/div[4]/div[2]/div/div[2]/div/div/div[3]/div/div/div[2]/form/div/div[3]/div/div[2]/div/p[contains(.,'The value is below the minimum')]"));
-					Assert.assertTrue(lossMessage,"Password validation messages are not displayed");
+					Assert.assertTrue("Password validation messages are not displayed",lossMessage);
 					boolean maxMessage = PageUtils.isElementPresent(driver, By.xpath("html/body/div[4]/div[2]/div/div[2]/div/div/div[3]/div/div/div[2]/form/div/div[4]/div/div[2]/div/p[contains(.,'The value is below the minimum')]"));
-					Assert.assertTrue(maxMessage,"Password validation messages are not displayed");
+					Assert.assertTrue("Password validation messages are not displayed",maxMessage);
 				}
 			};
 		}
@@ -155,13 +155,13 @@ public class OptimizationKnobPage extends MyProjPage {
 					@Override
 					public void Validate() {
 						boolean costMessage = PageUtils.isElementPresent(driver, By.xpath("html/body/div[4]/div[2]/div/div[2]/div/div/div[3]/div/div/div[2]/form/div/div[1]/div/div[2]/div/p[contains(.,'The value is above the maximum')]"));
-						Assert.assertTrue(costMessage,"Password validation messages are not displayed");
+						Assert.assertTrue("Password validation messages are not displayed",costMessage);
 						boolean latencyMessage = PageUtils.isElementPresent(driver, By.xpath("html/body/div[4]/div[2]/div/div[2]/div/div/div[3]/div/div/div[2]/form/div/div[2]/div/div[2]/div/p[contains(.,'The value is above the maximum')]"));
-						Assert.assertTrue(latencyMessage,"Password validation messages are not displayed");
+						Assert.assertTrue("Password validation messages are not displayed",latencyMessage);
 						boolean lossMessage = PageUtils.isElementPresent(driver, By.xpath("html/body/div[4]/div[2]/div/div[2]/div/div/div[3]/div/div/div[2]/form/div/div[3]/div/div[2]/div/p[contains(.,'The value is above the maximum')]"));
-						Assert.assertTrue(lossMessage,"Password validation messages are not displayed");
+						Assert.assertTrue("Password validation messages are not displayed",lossMessage);
 						boolean maxMessage = PageUtils.isElementPresent(driver, By.xpath("html/body/div[4]/div[2]/div/div[2]/div/div/div[3]/div/div/div[2]/form/div/div[4]/div/div[2]/div/p[contains(.,'The value is above the maximum')]"));
-						Assert.assertTrue(maxMessage,"Password validation messages are not displayed");
+						Assert.assertTrue("Password validation messages are not displayed",maxMessage);
 					}
 				};
 			}
