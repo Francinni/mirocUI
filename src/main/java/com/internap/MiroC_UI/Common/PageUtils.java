@@ -1,6 +1,7 @@
 package com.internap.MiroC_UI.Common;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -9,6 +10,20 @@ import org.openqa.selenium.firefox.FirefoxProfile;
 
 public class PageUtils {
 	
+	
+	 public static boolean isElementPresent(WebDriver driver, By by, int waitSeconds) {
+		   
+		   try {
+		   driver.manage().timeouts().implicitlyWait(waitSeconds, TimeUnit.SECONDS);
+		   driver.findElement(by); 
+		   driver.manage().timeouts().implicitlyWait(Common.TIME_OUT, TimeUnit.SECONDS);
+		   return true;     
+		  } catch (Exception e) {
+		    driver.manage().timeouts().implicitlyWait(Common.TIME_OUT, TimeUnit.SECONDS);
+		   return false;
+		  }
+		 }
+	 
 	public static boolean isElementPresent(WebDriver driver, By by) {
 		   
 		   try {
