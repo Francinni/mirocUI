@@ -46,6 +46,33 @@ public class OptimizationKnobTestCases extends MyProjTestCaseUtils {
 				.check(optimizatioKnobPage.assignmentListMustBePresent(uiInstance.getDriver()));
 	} 
 	
+	/**
+	 * This test case is the equivalent to the Testlink id: MIRO'
+	*/
+	@Test(groups = { "Negative",  "negativeKnobs" },dependsOnMethods = "updateKnobs")
+	public void negativeKnobs() {
+		using(optimizatioKnobPage = home
+				.goConfigurationTab(uiInstance.getDriver())
+				.goOptimizationKnob(uiInstance.getDriver())
+				.updateInvalidKnobs(uiInstance.getDriver(),-5, -5, -5, -5))
+				.check(optimizatioKnobPage.negativeValuesValidator(uiInstance.getDriver()));
+	}
+	
+	/**
+	 * This test case is the equivalent to the Testlink id: MIRO'
+	*/
+	@Test(groups = { "Negative",  "overKnobs" },dependsOnMethods = "negativeKnobs")
+	public void overKnobs() {
+		using(optimizatioKnobPage = home
+				.goConfigurationTab(uiInstance.getDriver())
+				.goOptimizationKnob(uiInstance.getDriver())
+				.updateInvalidKnobs(uiInstance.getDriver(),101, 101, 101, 101))
+				.check(optimizatioKnobPage.overValuesValidator(uiInstance.getDriver()));
+	}
+	
+	
+	//SIMULATION
+	
 	
 	/**
 	 * This test case is the equivalent to the Testlink id: MIRO'
@@ -53,50 +80,53 @@ public class OptimizationKnobTestCases extends MyProjTestCaseUtils {
 	@Test(groups = { "Positive", "updateSimulationKnobs" },  dependsOnMethods = "negativeKnobs")
 	public void updateSimulationKnobs() {
 
-		using(optimizatioKnobPage = home
-				.goConfigurationTab(uiInstance.getDriver())
-				.goOptimizationKnob(uiInstance.getDriver())
+		using(optimizatioKnobPage 
 				.updateSimulationKnobs(uiInstance.getDriver(),50, 50, 50, 50))
 				.check(optimizatioKnobPage.assignmentListMustBePresent(uiInstance.getDriver()));
 	}
 	
 	
-	//negative test cases
-	/**
-	 * This test case is the equivalent to the Testlink id: MIRO'
-	*/
-	@Test(groups = { "Negative",  "updateKnobs" },dependsOnMethods = "updateKnobs")
-	public void negativeKnobs() {
-		using(optimizatioKnobPage = home
-				.goConfigurationTab(uiInstance.getDriver())
-				.goOptimizationKnob(uiInstance.getDriver())
-				.updateKnobs(uiInstance.getDriver(),-5, -5, -5, -5))
-				.check(optimizatioKnobPage.negativeValuesValidator(uiInstance.getDriver()));
-	}
+	//negative test cases	
 	
 	/**
 	 * This test case is the equivalent to the Testlink id: MIRO'
 	*/
-	@Test(groups = { "Negative",  "updateKnobs" },dependsOnMethods = "negativeKnobs")
-	public void overKnobs() {
-		using(optimizatioKnobPage = home
-				.goConfigurationTab(uiInstance.getDriver())
-				.goOptimizationKnob(uiInstance.getDriver())
-				.updateKnobs(uiInstance.getDriver(),101, 101, 101, 101))
+	@Test(groups = { "Positive", "negativeSimulationKnobs" },  dependsOnMethods = "updateSimulationKnobs")
+	public void negativeSimulationKnobs() {
+
+		using(optimizatioKnobPage
+				.updateSimulationKnobs(uiInstance.getDriver(),-6, -6, -6, -6))
+				.check(optimizatioKnobPage.negativeValuesValidator(uiInstance.getDriver()));
+	}
+	
+	
+	/**
+	 * This test case is the equivalent to the Testlink id: MIRO'
+	*/
+	@Test(groups = { "Positive", "overSimulationKnobs" },  dependsOnMethods = "updateSimulationKnobs")
+	public void overSimulationKnobs() {
+
+		using(optimizatioKnobPage
+				.updateSimulationKnobs(uiInstance.getDriver(),101, 101, 101, 101))
 				.check(optimizatioKnobPage.overValuesValidator(uiInstance.getDriver()));
 	}
 	
 	/**
 	 * This test case is the equivalent to the Testlink id: MIRO'
 	*/
-	@Test(groups = { "Positive", "updateSimulationKnobs" },  dependsOnMethods = "updateSimulationKnobs")
-	public void negativeSimulationKnobs() {
+	@Test(groups = { "Positive", "miroUserUpdateKnobs" },  dependsOnMethods = "negativeSimulationKnobs")
+	public void miroUserUpdateKnobs() {
 
-		using(optimizatioKnobPage = home
-				.goConfigurationTab(uiInstance.getDriver())
-				.goOptimizationKnob(uiInstance.getDriver())
-				.updateSimulationKnobs(uiInstance.getDriver(),-6, -6, -6, -6))
-				.check(optimizatioKnobPage.assignmentListMustBePresent(uiInstance.getDriver()));
-	}
+		using(
+				loginPage = home  
+				.goLogOut(uiInstance.getDriver()).login("user", "password"))
+				.check(loginPage.successfulMessageMustBePresent())
+		
+		.andUsing(
+				optimizatioKnobPage = home
+						.goConfigurationTab(uiInstance.getDriver())
+						.goOptimizationKnob(uiInstance.getDriver())
+		).check(optimizatioKnobPage.miroUserValidator(uiInstance.getDriver()));				
+	}	
 
 }//end
