@@ -51,4 +51,8 @@ public interface Common {
 	public final int TIME_OUT = 15;
 	
 	
+	public final String configFileName = "config.json";
+	
+	
+	
 }

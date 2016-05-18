@@ -6,13 +6,17 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.testng.Assert;
 
 import com.internap.MiroC_UI.Common.MyProjPage;
+import com.internap.MiroC_UI.Common.PageUtils;
 import com.internap.MiroC_UI.Pages.AuthenticationPage;
 import com.internap.MiroC_UI.Pages.EditUserPage;
 import com.internap.MiroC_UI.Pages.OptimizationKnobPage;
 import com.internap.MiroC_UI.Pages.PortSecurityPage;
 import com.internap.MiroC_UI.Pages.SaveExportImportPage;
+import com.internap.MiroC_UI.Pages.WebCertificatePage;
+import com.ts.commons.Validator;
 
 public class ConfigurationPage extends MyProjPage {
 	
@@ -34,9 +38,9 @@ public class ConfigurationPage extends MyProjPage {
 		@FindBy(xpath = ".//*[@id='sidebar']/ul/li[11]/ul/li[6]/a")
 		private WebElement optimizationTab;
 		
-			//optimization knobs
-			@FindBy(xpath = ".//*[@id='sidebar']/ul/li[11]/ul/li[6]/ul/li[1]/a")
-			private WebElement knobsTab;
+		//optimization knobs
+		@FindBy(xpath = ".//*[@id='sidebar']/ul/li[11]/ul/li[6]/ul/li[1]/a")
+		private WebElement knobsTab;
 		
 		@FindBy(xpath = ".//*[@id='sidebar']/ul/li[11]/ul/li[7]/a")
 		private WebElement controlTab;
@@ -47,10 +51,11 @@ public class ConfigurationPage extends MyProjPage {
 		@FindBy(xpath = ".//*[@id='sidebar']/ul/li[11]/ul/li[9]/a")
 		private WebElement userTab;
 		
-			//edit user
-			@FindBy(xpath = ".//*[@id='sidebar']/ul/li[11]/ul/li[9]/ul/li/a")
-			//@FindBy(xpath = "//a[contains(.,'Edit Users ')]")
-			private WebElement editUserTab;
+		//edit user
+		@FindBy(xpath = ".//*[@id='sidebar']/ul/li[11]/ul/li[9]/ul/li/a")
+		//@FindBy(xpath = "//a[contains(.,'Edit Users ')]")
+		private WebElement editUserTab;
+		
 		
 	
 	@Override
@@ -111,6 +116,24 @@ public class ConfigurationPage extends MyProjPage {
 			  executor.executeScript("arguments[0].click();", this.authenticationTab);
 			
 			return PageFactory.initElements(driver, AuthenticationPage.class);
+		}
+		
+		public WebCertificatePage goWebCertificate (WebDriver driver){
+
+			  JavascriptExecutor executor = (JavascriptExecutor)driver;
+			  executor.executeScript("arguments[0].click();", this.webCertificateTab);
+			
+			return PageFactory.initElements(driver, WebCertificatePage.class);
+		}
+		
+		public Validator webCertificateNotShownForNonAdmins(final WebDriver driver) {
+			return new Validator() {
+				@Override
+				public void Validate() {	
+					boolean isWebCertificateDisplayed = PageUtils.isElementClickable(driver, webCertificateTab);
+					Assert.assertFalse(isWebCertificateDisplayed,"Web Certificate Option is displayed for non admin users");
+				}
+			};
 		}
 
 	

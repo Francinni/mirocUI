@@ -1,5 +1,7 @@
 package com.internap.MiroC_UI;
 
+import java.io.File;
+
 import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.annotations.BeforeClass;
@@ -32,7 +34,7 @@ public class SaveExportImportCases extends MyProjTestCaseUtils {
 		home = PageFactory.initElements(uiInstance.getDriver(), Home.class);
 	}
 	
-/////////////////////////////////////////////////////////////////////SAVE/EXPORT/IMPORT///////////////////////////////////////////////////////////////////////////	
+///////////////////////////////////////////////////////////SAVE/EXPORT/IMPORT -- GENERAL///////////////////////////////////////////////////////////////////////////	
 	
 	/**
 	 * This test case is the equivalent to the Testlink id:
@@ -88,19 +90,24 @@ public class SaveExportImportCases extends MyProjTestCaseUtils {
 /////////////////////////////////////////////////////////////////////IMPORT///////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * This test case is the equivalent to the Testlink id: MBOX-331: Upload the Configuration using an existing backup
+	 * This test case is the equivalent to the Testlink id: 
+	 * MBOX-331: Upload the Configuration using an existing backup
+	 * MBOX-712: Import file image correctly displayed
+	 * @throws Exception 
 	 */ 
 	@Test(groups = { "Positive", "importConfigurationFile"} ,dependsOnMethods = "downloadConfigurationFile") 
-	public void importConfigurationFile() { 
+	public void importConfigurationFile() throws Exception { 
 		using(saveExportImportPage 
 				.goImportTab(uiInstance.getDriver())
-				.uploadConfigurationFile(uiInstance.getDriver(),Common.configFile))				
-		.check(saveExportImportPage.checkSuccesfulMessageWhenFileIsUploaded(uiInstance.getDriver())
-				//,saveExportImportPage.checkFileNameOnImportImage(uiInstance.getDriver(), Common.configFile))
-				);
+				.selectConfigurationFile(uiInstance.getDriver(),Common.configFile))	
+		.check(saveExportImportPage.checkFileNameOnImportImage(uiInstance.getDriver(),Common.configFileName))
+		
+		.andUsing(saveExportImportPage
+				.uploadConfigurationFile(uiInstance.getDriver())) 
+		.check(saveExportImportPage.checkSuccesfulMessageWhenFileIsUploaded(uiInstance.getDriver()));
 
 	} 
-	
+
 	/**
 	 * This test case is the equivalent to the Testlink id:MBOX-339 Validation message when the user try to upload the Configuration without a file
 	 */ 
@@ -109,7 +116,7 @@ public class SaveExportImportCases extends MyProjTestCaseUtils {
 		PageUtils.refreshPage(uiInstance.getDriver());
 		using(saveExportImportPage
 				.goImportTab(uiInstance.getDriver())
-				.uploadConfigurationFile(uiInstance.getDriver(),""))				
+				.tryUploadConfigurationFile(uiInstance.getDriver(),""))				
 		.check(saveExportImportPage.checkValidationWhenTheresNoFileSelected(uiInstance.getDriver())
 				);
 
@@ -120,14 +127,34 @@ public class SaveExportImportCases extends MyProjTestCaseUtils {
 	 */ 
 	@Test(groups = { "Negative", "validateWhenInvalidFileIsSelected"}, dependsOnMethods = "validateWhenNoFileIsSelected") 
 	public void validateWhenInvalidFileIsSelected() { 
+		String f = new File("src/main/resources/newAvatar.jpg").getAbsolutePath();
 		PageUtils.refreshPage(uiInstance.getDriver());
 		using(saveExportImportPage
 				.goImportTab(uiInstance.getDriver())
-				.uploadConfigurationFile(uiInstance.getDriver(),""))				
+				.tryUploadConfigurationFile(uiInstance.getDriver(),f))				
 		.check(saveExportImportPage.checkValidationWhenInvalidFileIsSelected(uiInstance.getDriver())
 				);
 		PageUtils.refreshPage(uiInstance.getDriver());
 
 	} 
+	
+	/**
+	 * This test case is the equivalent to the Testlink id: 
+	 *MBOX-621: Remove MIRO Configuration File
+	 */ 
+	@Test(groups = { "Positive", "removeSelectedFile"},dependsOnMethods = "validateWhenInvalidFileIsSelected") 
+	public void removeSelectedFile() throws Exception { 
+		using(saveExportImportPage 
+				.goImportTab(uiInstance.getDriver())
+				.selectConfigurationFile(uiInstance.getDriver(),Common.configFileName))	
+		.check(saveExportImportPage.checkFileNameOnImportImage(uiInstance.getDriver(),Common.configFileName))
+		
+		.andUsing(saveExportImportPage
+				.removeFile(uiInstance.getDriver())) 
+		.check(saveExportImportPage.checkFileWasRemoved(uiInstance.getDriver(), Common.configFileName));
+
+	}
+	
+	
 	
 }

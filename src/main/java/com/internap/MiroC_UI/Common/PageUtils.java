@@ -50,6 +50,20 @@ public class PageUtils {
 		  }
 		 }
 		
+		
+		public static boolean isElementClickable(WebDriver driver, WebElement element) {
+			   
+			   try {
+			  
+			   element.click(); 
+			  
+			   return true;     
+			  } catch (Exception e) {
+			   
+			   return false;
+			  }
+		}
+		
 		public static void refreshPage(WebDriver driver){
 			
 			driver.navigate().refresh();

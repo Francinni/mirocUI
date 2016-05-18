@@ -1,8 +1,12 @@
 package com.internap.MiroC_UI.Pages;
 
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -108,7 +112,7 @@ public class SaveExportImportPage extends MyProjPage {
 				public void Validate() {
 					//driver.get(Common.downloadPath);
 					
-					Assert.assertTrue("Failed to download Expected file", PageUtils.isFileDownloaded(Common.downloadPath, "config.json"));
+					Assert.assertTrue("Failed to download Expected file", PageUtils.isFileDownloaded(Common.downloadPath, Common.configFileName));
 				}
 			};
 		}
@@ -120,16 +124,48 @@ public class SaveExportImportPage extends MyProjPage {
 			return PageFactory.initElements(driver, SaveExportImportPage.class);		
 		}
 		
-
-		// Method to upload the configuration file
-		public SaveExportImportPage uploadConfigurationFile(WebDriver driver, final String file) {
+		// Method to select the configuration file
+		public SaveExportImportPage selectConfigurationFile(WebDriver driver, final String file)throws Exception {
 			
+			this.selectFileButton.click();
+			Thread.sleep(2000);
+			StringSelection s=new StringSelection(file);
+			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(s,null);
+			Robot robot=new Robot();
+			robot.keyPress(java.awt.event.KeyEvent.VK_ENTER);
+			robot.keyRelease(java.awt.event.KeyEvent.VK_ENTER);
+			robot.keyPress(java.awt.event.KeyEvent.VK_CONTROL);
+			robot.keyPress(java.awt.event.KeyEvent.VK_V);
+			robot.keyRelease(java.awt.event.KeyEvent.VK_CONTROL);
+			Thread.sleep(3000);
+			robot.keyPress(java.awt.event.KeyEvent.VK_ENTER);
+			
+			return this;	
+		}
+		
+		// Method to upload the configuration file
+		public SaveExportImportPage uploadConfigurationFile(WebDriver driver) {
+			this.starUploadButton.click();
+			driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+			return this;	
+		}	
+		
+		
+		// Method to directly upload the configuration file without the pop up window
+		public SaveExportImportPage tryUploadConfigurationFile(WebDriver driver, final String file) {
 			this.selectFileButton.sendKeys(file);
 			driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 			this.starUploadButton.click();
 			driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 			return this;	
 		}	
+		
+		// Method to remove a selected file
+		public SaveExportImportPage removeFile(WebDriver driver) {
+			this.removeFileButton.click();
+			driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+			return this;	
+		}
 		
 		// Validator to check is file was downloaded 
 		public Validator checkFileNameOnImportImage(final WebDriver driver, final String fileName) {
@@ -142,6 +178,8 @@ public class SaveExportImportPage extends MyProjPage {
 				}
 			};
 		}
+		
+		
 		
 		// Validator to check is file was downloaded 
 		public Validator checkSuccesfulMessageWhenFileIsUploaded(final WebDriver driver) {
@@ -179,4 +217,19 @@ public class SaveExportImportPage extends MyProjPage {
 				}
 			};
 		}
+		
+		// Validator to check that file selected was removed
+		public Validator checkFileWasRemoved(final WebDriver driver,final String fileName) {
+			return new Validator() {
+				@Override
+				public void Validate() {
+					
+					boolean isFileRemoved = PageUtils.isElementPresent(driver, By.xpath("//div[@class='fileinput-preview fileinput-exists thumbnail'][contains(.,'"+fileName+"')]"));
+					Assert.assertFalse("The file was not removed",isFileRemoved);
+				}
+			};
+		}
+				
+			
+				
 }
