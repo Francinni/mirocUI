@@ -22,7 +22,7 @@ public class PortSecurityTestCases extends MyProjTestCaseUtils {
 	ConfigurationPage configurationPage;
 	Home home;
 
-	public PortSecurityTestCases(String browserType) {
+	public PortSecurityTestCases(String browserType){
 		super(BrowserType.FIREFOX);
 	}
 	

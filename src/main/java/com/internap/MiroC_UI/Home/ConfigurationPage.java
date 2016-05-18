@@ -11,6 +11,7 @@ import com.internap.MiroC_UI.Common.MyProjPage;
 import com.internap.MiroC_UI.Pages.EditUserPage;
 import com.internap.MiroC_UI.Pages.OptimizationKnobPage;
 import com.internap.MiroC_UI.Pages.PortSecurityPage;
+import com.internap.MiroC_UI.Pages.SaveExportImportPage;
 
 public class ConfigurationPage extends MyProjPage {
 	
@@ -93,6 +94,15 @@ public class ConfigurationPage extends MyProjPage {
 		
 		return PageFactory.initElements(driver, OptimizationKnobPage.class);
 	}
+	
+	//Save /Export / Import
+		public SaveExportImportPage goSaveExportImport (WebDriver driver){
+
+			  JavascriptExecutor executor = (JavascriptExecutor)driver;
+			  executor.executeScript("arguments[0].click();", this.saveImportExportTab);
+			
+			return PageFactory.initElements(driver, SaveExportImportPage.class);
+		}
 
 	
 }

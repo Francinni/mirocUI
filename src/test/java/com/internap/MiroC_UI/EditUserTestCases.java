@@ -21,7 +21,7 @@ public class EditUserTestCases extends MyProjTestCaseUtils {
 	ConfigurationPage configurationPage;
 	Home home;
 
-	public EditUserTestCases(String browserType) {
+	public EditUserTestCases(String browserType) throws Exception {
 		super(BrowserType.FIREFOX);
 	}
 

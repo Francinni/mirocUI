@@ -8,19 +8,20 @@ import com.internap.MiroC_UI.Home.*;
 import com.ts.commons.ChromeDriver;
 import com.ts.commons.FirefoxDriver;
 import com.ts.commons.InternetExplorerDriver;
+import com.internap.MiroC_UI.Common.PageUtils;
 
 public class InternapUI {
 	
 	private static WebDriver driver;
 
-	public InternapUI(String browserType) {
+	public InternapUI(String browserType){
 
 		switch (browserType) {
 		case BrowserType.CHROME:
 			driver = ChromeDriver.createInstance();
 			break;
 		case BrowserType.FIREFOX:
-			driver = new FirefoxDriver();
+			driver = new FirefoxDriver(PageUtils.firefoxProfile());
 			break;
 		case BrowserType.IE:
 			driver = InternetExplorerDriver.createInstance();

@@ -1,8 +1,11 @@
 package com.internap.MiroC_UI.Common;
 
+import java.io.File;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxProfile;
 
 public class PageUtils {
 	
@@ -35,6 +38,47 @@ public class PageUtils {
 		public static void refreshPage(WebDriver driver){
 			
 			driver.navigate().refresh();
+		}
+		
+		public static FirefoxProfile firefoxProfile() {
+			
+			FirefoxProfile firefoxProfile = new FirefoxProfile();
+			
+			try {
+				
+				firefoxProfile.setPreference("browser.download.folderList",2);
+				firefoxProfile.setPreference("browser.download.manager.showWhenStarting",false);
+				firefoxProfile.setPreference("browser.download.dir",Common.downloadPath);
+				firefoxProfile.setPreference("browser.helperApps.neverAsk.saveToDisk","application/json");	
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+				
+			return firefoxProfile;
+		}
+		
+		public static boolean isFileDownloaded(String downloadPath, String fileName) {
+			boolean flag = false;
+		    File dir = new File(downloadPath);
+		    File[] dir_contents = dir.listFiles();
+		  	    
+		    for (int i = 0; i < dir_contents.length; i++) {
+		        if (dir_contents[i].getName().equals(fileName)){
+		        	
+		        	flag=true;
+		        	try {
+						Thread.sleep(5000);
+						dir_contents[i].delete();
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+		        	
+		        }
+                else flag=false;
+		    }
+
+		    return flag;
 		}
 		
 
