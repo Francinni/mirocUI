@@ -8,6 +8,7 @@ import org.testng.annotations.Test;
 import com.internap.MiroC_UI.Common.Common;
 import com.internap.MiroC_UI.Common.InternapUI;
 import com.internap.MiroC_UI.Common.MyProjTestCaseUtils;
+import com.internap.MiroC_UI.Common.PageUtils;
 import com.internap.MiroC_UI.Home.ConfigurationPage;
 import com.internap.MiroC_UI.Home.Home;
 import com.internap.MiroC_UI.Home.LoginPage;
@@ -87,20 +88,45 @@ public class SaveExportImportCases extends MyProjTestCaseUtils {
 /////////////////////////////////////////////////////////////////////IMPORT///////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * This test case is the equivalent to the Testlink id: MBOX-579- User can change image profile
+	 * This test case is the equivalent to the Testlink id: MBOX-331: Upload the Configuration using an existing backup
 	 */ 
-	@Test(groups = { "Positive", "importConfigurationFile"} )//,dependsOnMethods = "downloadConfigurationFile") 
+	@Test(groups = { "Positive", "importConfigurationFile"} ,dependsOnMethods = "downloadConfigurationFile") 
 	public void importConfigurationFile() { 
-		using(saveExportImportPage = home  
-				.goConfigurationTab(uiInstance.getDriver()) 
-				.goSaveExportImport(uiInstance.getDriver())
+		using(saveExportImportPage 
 				.goImportTab(uiInstance.getDriver())
-				.selectConfigurationFile(uiInstance.getDriver()))				
-		.check(); //saveExportImportPage.checkFileNameOnImportImage(uiInstance.getDriver(), Common.configFile)
+				.uploadConfigurationFile(uiInstance.getDriver(),Common.configFile))				
+		.check(saveExportImportPage.checkSuccesfulMessageWhenFileIsUploaded(uiInstance.getDriver())
+				//,saveExportImportPage.checkFileNameOnImportImage(uiInstance.getDriver(), Common.configFile))
+				);
 
-		//.andUsing(myProfilePage
-			//	.uploadImage(uiInstance.getDriver(), "src/main/resources/originalAvatar.jpg")) 
-		//.check(myProfilePage.avatarIsUploaded(uiInstance.getDriver()));
+	} 
+	
+	/**
+	 * This test case is the equivalent to the Testlink id:MBOX-339 Validation message when the user try to upload the Configuration without a file
+	 */ 
+	@Test(groups = { "Negative", "importConfigurationFile"}, dependsOnMethods = "importConfigurationFile") 
+	public void validateWhenNoFileIsSelected() { 
+		PageUtils.refreshPage(uiInstance.getDriver());
+		using(saveExportImportPage
+				.goImportTab(uiInstance.getDriver())
+				.uploadConfigurationFile(uiInstance.getDriver(),""))				
+		.check(saveExportImportPage.checkValidationWhenTheresNoFileSelected(uiInstance.getDriver())
+				);
+
+	} 
+	
+	/**
+	 * This test case is the equivalent to the Testlink id: MBOX-340: Validation message when the user try to upload the Configuration with a different format file
+	 */ 
+	@Test(groups = { "Negative", "validateWhenInvalidFileIsSelected"}, dependsOnMethods = "validateWhenNoFileIsSelected") 
+	public void validateWhenInvalidFileIsSelected() { 
+		PageUtils.refreshPage(uiInstance.getDriver());
+		using(saveExportImportPage
+				.goImportTab(uiInstance.getDriver())
+				.uploadConfigurationFile(uiInstance.getDriver(),""))				
+		.check(saveExportImportPage.checkValidationWhenInvalidFileIsSelected(uiInstance.getDriver())
+				);
+		PageUtils.refreshPage(uiInstance.getDriver());
 
 	} 
 	

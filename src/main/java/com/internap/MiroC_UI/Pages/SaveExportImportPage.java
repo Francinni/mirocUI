@@ -1,7 +1,8 @@
 package com.internap.MiroC_UI.Pages;
 
-import junit.framework.Assert;
+import java.util.concurrent.TimeUnit;
 
+import junit.framework.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -60,7 +61,7 @@ public class SaveExportImportPage extends MyProjPage {
 					boolean WriteMemorySuccesfullMessage = PageUtils
 							.isElementPresent(
 									driver,
-									By.xpath("//p[text()='Write to memory successfully']"));
+									By.xpath("//p[text()='Write to memory successfully']"), 5);
 					Assert.assertTrue(WriteMemorySuccesfullMessage);
 				}
 			};
@@ -119,32 +120,15 @@ public class SaveExportImportPage extends MyProjPage {
 			return PageFactory.initElements(driver, SaveExportImportPage.class);		
 		}
 		
-		// Method to select a configuration file
-		public SaveExportImportPage selectConfigurationFile(WebDriver driver) {
-			
-			try {
-				
-				this.selectFileButton.sendKeys(Common.configFile);
-				Thread.sleep(4000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-						
-			return this;
-		}	
-		
+
 		// Method to upload the configuration file
-		public SaveExportImportPage uploadConfigurationFile(WebDriver driver) {
+		public SaveExportImportPage uploadConfigurationFile(WebDriver driver, final String file) {
 			
-			try {
-				this.starUploadButton.click();
-				Thread.sleep(1000);
-				
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			
-			return this;
+			this.selectFileButton.sendKeys(file);
+			driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+			this.starUploadButton.click();
+			driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+			return this;	
 		}	
 		
 		// Validator to check is file was downloaded 
@@ -165,11 +149,34 @@ public class SaveExportImportPage extends MyProjPage {
 				@Override
 				public void Validate() {
 					
-					boolean isMessageDisplayed = PageUtils.isElementPresent(driver, By.xpath("//p[text()='Config imported successfully']"));
+					boolean isMessageDisplayed = PageUtils.isElementPresent(driver, By.xpath("//p[text()='Config imported successfully']"),10);
 					Assert.assertTrue("Succesful Message when the file is uploaded is not displayed",isMessageDisplayed);
 				}
 			};
 		}
 		
+		// Validator to check if error message is displayed when  no file is selected
+		public Validator checkValidationWhenTheresNoFileSelected(final WebDriver driver) {
+			return new Validator() {
+				@Override
+				public void Validate() {
+					
+					boolean isMessageDisplayed = PageUtils.isElementPresent(driver, By.xpath("//p[contains(.,'No file selected')]"),10);
+					Assert.assertTrue("Validation Message when the file isn't selected is not displayed",isMessageDisplayed);
+				}
+			};
+		}
 
+		
+		// Validator to check if error message is displayed when a non valid file is selected
+		public Validator checkValidationWhenInvalidFileIsSelected(final WebDriver driver) {
+			return new Validator() {
+				@Override
+				public void Validate() {
+					
+					boolean isMessageDisplayed = PageUtils.isElementPresent(driver, By.xpath("//p[contains(.,'Uploaded file is not valid json')]"),10);
+					Assert.assertTrue("Validation Message when the file is invalid is not displayed",isMessageDisplayed);
+				}
+			};
+		}
 }

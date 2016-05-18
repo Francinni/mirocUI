@@ -43,9 +43,12 @@ public interface Common {
 	public final String downloadPath = new File("src/main/resources/Downloads").getAbsolutePath();
 
 	/**
-	 * Common downloadPath to store downloaded files.
+	 * Common path when config.json is stored.
 	 */
 	public final String configFile = new File("src/main/resources/config.json").getAbsolutePath();
+	
+	
+	public final int TIME_OUT = 15;
 	
 	
 }
