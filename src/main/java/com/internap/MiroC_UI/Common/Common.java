@@ -1,5 +1,9 @@
 package com.internap.MiroC_UI.Common;
 
+import java.io.File;
+
+
+
 public interface Common {
 
 	/**
@@ -25,13 +29,26 @@ public interface Common {
 	/**
 	 * Common passWord is the password of the user for mirousers role automation testing
 	 */
-	public final String userPassWord = "Internap01";
+	public final String userPassWord = "password";
 	
 	/**
 	 * Common newPassword is the password use to change the current password automation testing
 	 */
 	public final String newPassWord = "123456";
 	
+	
+	/**
+	 * Common downloadPath to store downloaded files.
+	 */
+	public final String downloadPath = new File("src/main/resources/Downloads").getAbsolutePath();
+
+	/**
+	 * Common path when config.json is stored.
+	 */
+	public final String configFile = new File("src/main/resources/config.json").getAbsolutePath();
+	
+	
+	public final int TIME_OUT = 15;
 	
 	
 }

@@ -22,7 +22,7 @@ public class PortSecurityTestCases extends MyProjTestCaseUtils {
 	ConfigurationPage configurationPage;
 	Home home;
 
-	public PortSecurityTestCases(String browserType) {
+	public PortSecurityTestCases(String browserType){
 		super(BrowserType.FIREFOX);
 	}
 	
@@ -60,7 +60,7 @@ public class PortSecurityTestCases extends MyProjTestCaseUtils {
 	/**
 	 * This test case is the equivalent to the Testlink: MBOX-369:System validates if the user enter an invalid trusted network or blocked port
     */
-	@Test(groups = { "Negative", "cannotAddEmptyOrInvalidValuePortSecurity" }, dependsOnMethods = "cannotAddExistentPortSecurity")
+	@Test(groups = { "Negative", "cannotAddExistentPortSecurity" }, dependsOnMethods = "cannotAddExistentPortSecurity")
 	public void cannotAddEmptyOrInvalidValuePortSecurity() {
 
 		using(portSecurityPage
