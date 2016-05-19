@@ -63,9 +63,7 @@ public class SaveExportImportCases extends MyProjTestCaseUtils {
 		using(saveExportImportPage 
 				.writeRunningConfiguration(uiInstance.getDriver()))
 				
-		.check(saveExportImportPage.successfulMessageShouldBePresentedOnSave(uiInstance.getDriver()));
-		
-				
+		.check(saveExportImportPage.successfulMessageShouldBePresentedOnSave(uiInstance.getDriver()));				
 	}
 	
 	

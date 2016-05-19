@@ -14,6 +14,7 @@ import com.internap.MiroC_UI.Pages.AuthenticationPage;
 import com.internap.MiroC_UI.Pages.EditUserPage;
 import com.internap.MiroC_UI.Pages.OptimizationKnobPage;
 import com.internap.MiroC_UI.Pages.PortSecurityPage;
+import com.internap.MiroC_UI.Pages.ProvidersPage;
 import com.internap.MiroC_UI.Pages.SaveExportImportPage;
 import com.internap.MiroC_UI.Pages.WebCertificatePage;
 import com.ts.commons.Validator;
@@ -134,6 +135,19 @@ public class ConfigurationPage extends MyProjPage {
 					Assert.assertFalse(isWebCertificateDisplayed,"Web Certificate Option is displayed for non admin users");
 				}
 			};
+		}
+		
+		public ProvidersPage goProviders (WebDriver driver){
+
+			WebElement element = driver.findElement(By.xpath(".//*[@id='sidebar']/ul/li[11]/ul/li[6]/a"));
+			  JavascriptExecutor executor = (JavascriptExecutor)driver;
+			  executor.executeScript("arguments[0].click();", element);
+			
+			WebElement element2 = driver.findElement(By.xpath(".//*[@id='sidebar']/ul/li[11]/ul/li[6]/ul/li[2]/a"));
+			  JavascriptExecutor executor2= (JavascriptExecutor)driver;
+			  executor2.executeScript("arguments[0].click();", element2);
+			
+			return PageFactory.initElements(driver, ProvidersPage.class);
 		}
 
 	

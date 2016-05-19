@@ -1,5 +1,6 @@
 package com.internap.MiroC_UI.Common;
 
+
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 
@@ -81,7 +82,7 @@ public class PageUtils {
 				firefoxProfile.setPreference("browser.helperApps.neverAsk.saveToDisk","application/json");	
 				
 			} catch (Exception e) {
-				// TODO: handle exception
+
 			}
 				
 			return firefoxProfile;
@@ -100,7 +101,7 @@ public class PageUtils {
 						Thread.sleep(5000);
 						dir_contents[i].delete();
 					} catch (Exception e) {
-						// TODO: handle exception
+
 					}
 		        	
 		        }
@@ -110,6 +111,41 @@ public class PageUtils {
 		    return flag;
 		}
 		
+		//Method to get a random number beween 100 and 9999
+		public static int randomNumber(){
+			
+			int numAleatorio= 0;
+			
+            numAleatorio=(int)Math.floor(Math.random()*(100-(9999+1))+(9999));
+            System.out.println(numAleatorio);
+	
+			return numAleatorio;
+			
+		}
+		
+		//Method to convert a hexadecimal color value to RGB value
+		public static String hex2Rgb(String colorStr) {
+			String rgbColor = "";
+		  rgbColor = (Integer.valueOf( colorStr.substring( 1, 3 ), 16 )).toString() + ", " +
+		 (Integer.valueOf( colorStr.substring( 3, 5 ), 16 )).toString() + ", " + 
+		            (Integer.valueOf( colorStr.substring( 5, 7 ), 16 )).toString() ;
+		    
+		   return rgbColor;
+		}
+		
+		public static String hexColor(){
+			
+			String[] colors = {"#2218ab","#f0182a", "#15d922", "#2d0730", "#7cede7", "#498c56", "#ab9059", "#b0b051"};
+			int random = (int)Math.floor(Math.random()*(0-(colors.length))+(colors.length));
+			
+			return colors[random];
+			
+		}
+		
+		//public static void main(String [ ] args){}
 
-
+		
+		
 }
+
+
