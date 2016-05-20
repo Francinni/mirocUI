@@ -1,5 +1,6 @@
 package com.internap.MiroC_UI.Pages;
 
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -8,6 +9,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.testng.Assert;
 
+import java.util.*;
+
+import com.google.common.collect.Ordering;
 import com.internap.MiroC_UI.Common.MyProjPage;
 import com.internap.MiroC_UI.Common.PageUtils;
 import com.ts.commons.Validator;
@@ -78,8 +82,8 @@ public class ProvidersPage extends MyProjPage{
 	}
 	
 	
-	//Validator to make sure succesfull message is displayed
-	public Validator providerIsAdded(final WebDriver driver) {
+	//Validates succesfull message is displayed
+	public Validator providerIsSaved(final WebDriver driver) {
 		return new Validator() {
 			@Override
 			public void Validate() {							
@@ -90,7 +94,7 @@ public class ProvidersPage extends MyProjPage{
 		};
 	}
 	
-	//Validator to make sure that the new asn is added to the list, checking it AS+asn value concatenation and rgb color value.
+	//Validates that the new asn is added to the list, checking its AS+asn value concatenation and rgb color value.
 	public Validator providerIsAddedToList(final WebDriver driver, final String asn, final String hexColor) {
 		return new Validator() {
 			@Override
@@ -102,5 +106,40 @@ public class ProvidersPage extends MyProjPage{
 			}
 		};
 	}
+	
+	//Validates that elements are sorted by Name in the table
+	public Validator providersAreSortedByName(final WebDriver driver) {
+		return new Validator() {
+			@Override
+			public void Validate() {	
+				ArrayList<String> asnNames = new ArrayList<String>();
+				List<WebElement> asns = driver.findElements(By.xpath("(//td[@class='ng-binding'])"));
+				for(int i=0; i<=asns.size()-1;i++){
+					if (i%2!=1)
+						asnNames.add((asns.get(i).getText()).trim());
+				}
+
+				boolean isSorted = Ordering.natural().isOrdered(asnNames);
+				Assert.assertTrue(isSorted,"Elements on the table are not sorted");
+
+			}
+		};
+	}
+	
+	//Validates that the empty fields validation are not shown before clicking on Save
+	public Validator emptyValidationIsNotShown(final WebDriver driver) {
+		return new Validator() {
+			@Override
+			public void Validate() {
+				JavascriptExecutor executor = (JavascriptExecutor) driver;
+				   executor.executeScript("arguments[0].click();", addProviderButton);
+				boolean isElementDisplayed = PageUtils.
+						isElementPresent(driver, By.xpath("//p[text()='This value is required']"),5);
+				Assert.assertFalse(isElementDisplayed,"Validation MEssages for empty Fields are displayed even Save button has not been clicked");
+				PageUtils.refreshPage(driver);
+			}
+		};
+	}
+
 
 }

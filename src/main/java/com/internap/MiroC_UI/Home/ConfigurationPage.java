@@ -13,6 +13,7 @@ import com.internap.MiroC_UI.Common.PageUtils;
 import com.internap.MiroC_UI.Pages.AuthenticationPage;
 import com.internap.MiroC_UI.Pages.EditUserPage;
 import com.internap.MiroC_UI.Pages.OptimizationKnobPage;
+import com.internap.MiroC_UI.Pages.OverridesPage;
 import com.internap.MiroC_UI.Pages.PortSecurityPage;
 import com.internap.MiroC_UI.Pages.ProvidersPage;
 import com.internap.MiroC_UI.Pages.SaveExportImportPage;
@@ -148,6 +149,19 @@ public class ConfigurationPage extends MyProjPage {
 			  executor2.executeScript("arguments[0].click();", element2);
 			
 			return PageFactory.initElements(driver, ProvidersPage.class);
+		}
+		
+		public OverridesPage goOverrides (WebDriver driver){
+
+			WebElement element = driver.findElement(By.xpath(".//*[@id='sidebar']/ul/li[11]/ul/li[6]/a"));
+			  JavascriptExecutor executor = (JavascriptExecutor)driver;
+			  executor.executeScript("arguments[0].click();", element);
+			
+			WebElement element2 = driver.findElement(By.xpath(".//*[@id='sidebar']/ul/li[11]/ul/li[6]/ul/li[3]/a"));
+			  JavascriptExecutor executor2= (JavascriptExecutor)driver;
+			  executor2.executeScript("arguments[0].click();", element2);
+			
+			return PageFactory.initElements(driver, OverridesPage.class);
 		}
 
 	
